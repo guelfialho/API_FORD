@@ -33,7 +33,7 @@ class Tabelas {
 			if (error) {
 				console.log(error);
 			} else {
-				console.log(`Tabela de usuário criada com sucesso`);
+				// console.log(`Tabela de usuário criada com sucesso`);
 			}
 		});
 	}
@@ -52,7 +52,7 @@ class Tabelas {
 			if (error) {
 				console.log(error);
 			} else {
-				console.log(`Tabela de veículo criada com sucesso`);
+				// console.log(`Tabela de veículo criada com sucesso`);
 			}
 		});
 	}
@@ -75,7 +75,7 @@ class Tabelas {
 			if (error) {
 				console.log(error);
 			} else {
-				console.log(`Tabela de dados de veículo criada com sucesso`);
+				// console.log(`Tabela de dados de veículo criada com sucesso`);
 			}
 		});
 	}
@@ -93,7 +93,7 @@ class Tabelas {
 			if (error) {
 				console.log(error);
 			} else {
-				console.log(`Veículo inserido com sucesso!`);
+				// console.log(`Veículo inserido com sucesso!`);
 			}
 		});
 	}
@@ -125,7 +125,7 @@ class Tabelas {
 			if (error) {
 				console.log(error);
 			} else {
-				console.log(`Dados de veículo inserido com sucesso`);
+				// console.log(`Dados de veículo inserido com sucesso`);
 			}
 		});
 	}
@@ -142,7 +142,7 @@ class Tabelas {
 			if (error) {
 				console.log(error);
 			} else {
-				console.log(`Usuário inserido com sucesso`);
+				// console.log(`Usuário inserido com sucesso`);
 			}
 		});
 	}

@@ -15,15 +15,17 @@ connection.connect((erro) => {
 	} else {
 		console.log(`Conectado ao banco ${process.env.DB_NAME}`);
 		Tables.init(connection);
+
+		server.use(cors());
+		server.use(cors());
+		server.use(bodyParser.json());
+
+		server.use(`/api`, routes);
+
+		server.listen(process.env.PORT, () => {
+			console.log(
+				`Servidor rodando em: http://localhost:${process.env.PORT}`
+			);
+		});
 	}
-});
-
-server.use(cors());
-server.use(cors());
-server.use(bodyParser.json());
-
-server.use(`/api`, routes);
-
-server.listen(process.env.PORT, () => {
-	console.log(`Servidor rodando em: http://localhost:${process.env.PORT}`);
 });
