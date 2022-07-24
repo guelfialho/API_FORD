@@ -20,6 +20,7 @@
 	"homepage": "https://github.com/guelfialho/API_FORD#readme",
 	"dependencies": {
 		"body-parser": "^1.20.0",
+		"consign": "^0.1.6",
 		"cors": "^2.8.5",
 		"dotenv": "^16.0.1",
 		"express": "^4.18.1",
