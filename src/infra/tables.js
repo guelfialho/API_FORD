@@ -4,6 +4,18 @@ class Tabelas {
 		this.createUserTable();
 		this.createVehicleTable();
 		this.createVehicleDataTable();
+		this.insertVehicle('Ranger', 145760, 70000, 27550);
+		this.insertVehicleData(
+			'2FRHDUYS2Y63NHD22454',
+			'23344',
+			'36,36,35,34',
+			'on',
+			'Ok',
+			'76',
+			'-12,2322',
+			'-35,2314'
+		);
+		this.insertUser('admin', 'admin@ford.com', '123456', 'Admin');
 	}
 
 	createUserTable() {
@@ -64,6 +76,73 @@ class Tabelas {
 				console.log(error);
 			} else {
 				console.log(`Tabela de dados de veículo criada com sucesso`);
+			}
+		});
+	}
+
+	insertVehicle(model, sold, connected, softwareUpdates) {
+		const INSERT_VEHICLE = `
+		INSERT INTO VEHICLE (
+			model, 
+			sold,
+			connected,
+			softwareUpdates
+		) SELECT '${model}', ${sold}, ${connected}, ${softwareUpdates} WHERE NOT EXISTS (SELECT * FROM VEHICLE WHERE model = '${model}')`;
+
+		this.connection.query(INSERT_VEHICLE, (error) => {
+			if (error) {
+				console.log(error);
+			} else {
+				console.log(`Veículo inserido com sucesso!`);
+			}
+		});
+	}
+
+	insertVehicleData(
+		vin,
+		odometer,
+		tirePressure,
+		status,
+		batteryStatus,
+		fuelLevel,
+		latitude,
+		longitude
+	) {
+		const INSERT_VEHICLEDATA = `
+		INSERT INTO VEHICLEDATA (
+			vin, 
+			odometer, 
+			tirePressure,
+			status,
+			batteryStatus,
+			fuelLevel,
+			latitude,
+			longitude
+		) SELECT '${vin}', '${odometer}', '${tirePressure}', '${status}', '${batteryStatus}', '${fuelLevel}', '${latitude}', '${longitude}' WHERE NOT EXISTS (SELECT * FROM VEHICLEDATA WHERE vin = '${vin}')
+		`;
+
+		this.connection.query(INSERT_VEHICLEDATA, (error) => {
+			if (error) {
+				console.log(error);
+			} else {
+				console.log(`Dados de veículo inserido com sucesso`);
+			}
+		});
+	}
+
+	insertUser(name, email, password, full_name) {
+		const INSERT_USER = `
+		INSERT INTO user (
+    		name, 
+    		email,
+    		password,
+    		full_name
+		) SELECT '${name}', '${email}', '${password}', '${full_name}' WHERE NOT EXISTS (SELECT * FROM user WHERE name = '${name}')`;
+		this.connection.query(INSERT_USER, (error) => {
+			if (error) {
+				console.log(error);
+			} else {
+				console.log(`Usuário inserido com sucesso`);
 			}
 		});
 	}
