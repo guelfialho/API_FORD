@@ -1,28 +1,29 @@
-// USING .ENV FILE ---------------------------------------
 require('dotenv').config({ path: 'config.env' });
 
-// IMPORTS ------------------------------------------------
+const express = require('express');
+const cors = require('cors');
+const bodyParser = require('body-parser');
 
-const customExpress = require('./config/customExpress');
+const routes = require('./routes');
+const server = express();
 const connection = require('./infra/connection');
-const Tabelas = require('./infra/tables');
+const Tables = require('./infra/tables');
 
-// CONECTANDO AO BANCO DE DADOS MYSQL -----------------------
-
-connection.connect((error) => {
-	if (error) {
-		console.log(error);
+connection.connect((erro) => {
+	if (erro) {
+		console.log(erro);
 	} else {
-		console.log(`Conectado ao banco de dados ${process.env.DB_NAME}`);
-
-		Tabelas.init(connection);
-
-		const app = customExpress(); // APENAS RODA O SERVIDOR SE ESTIVER CONECTADO AO BANCO DE DADOS.
-
-		app.listen(process.env.PORT, () => {
-			console.log(
-				`Servidor rodando em: http://localhost:${process.env.PORT}`
-			);
-		});
+		console.log(`Conectado ao banco ${process.env.DB_NAME}`);
+		Tables.init(connection);
 	}
+});
+
+server.use(cors());
+server.use(cors());
+server.use(bodyParser.json());
+
+server.use(`/api`, routes);
+
+server.listen(process.env.PORT, () => {
+	console.log(`Servidor rodando em: http://localhost:${process.env.PORT}`);
 });
