@@ -1,31 +1,13 @@
-require('dotenv').config({ path: 'config.env' });
-
 const express = require('express');
 const cors = require('cors');
 const bodyParser = require('body-parser');
 
 const routes = require('./routes');
-const server = express();
-const connection = require('./infra/connection');
-const Tables = require('./infra/tables');
+const app = express();
 
-connection.connect((erro) => {
-	if (erro) {
-		console.log(erro);
-	} else {
-		console.log(`Conectado ao banco ${process.env.DB_NAME}`);
-		Tables.init(connection);
+app.use(cors());
+app.use(bodyParser.json());
 
-		server.use(cors());
-		server.use(cors());
-		server.use(bodyParser.json());
+app.use(`/api`, routes);
 
-		server.use(`/api`, routes);
-
-		server.listen(process.env.PORT, () => {
-			console.log(
-				`Servidor rodando em: http://localhost:${process.env.PORT}`
-			);
-		});
-	}
-});
+module.exports = app;
