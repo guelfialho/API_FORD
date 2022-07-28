@@ -18,3 +18,5 @@ connection.connect((erro) => {
 		});
 	}
 });
+
+module.exports = app;
