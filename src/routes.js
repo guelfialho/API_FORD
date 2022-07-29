@@ -16,7 +16,7 @@ router.delete('/user/:id', UserController.deleteUser);
 router.get('/vehicles', VehicleController.getVehicle); // TESTED
 router.get('/vehicles/:id', VehicleController.getVehicleById);
 router.post('/vehicle', VehicleController.insertVehicle); // TESTED
-router.put('/vehicle/:id', VehicleController.modifyVehicle);
+router.put('/vehicle/:id', VehicleController.modifyVehicle); // TESTED
 router.delete('/vehicle/:id', VehicleController.deleteVehicle);
 
 // --------------  ROTAS DE VEICULOS -------------------

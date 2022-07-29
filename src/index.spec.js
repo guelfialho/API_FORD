@@ -266,3 +266,45 @@ describe('Test my PUT /api/user response', () => {
 		expect(res.body.result).toHaveProperty('full_name', user.full_name);
 	});
 });
+
+describe('Test my PUT /api/vehicle response', () => {
+	const id5 = 41;
+	let olderVehicle = '';
+	afterAll(async () => {
+		const responsee = await request(app)
+			.put(`/api/vehicle/${id5}`)
+			.send(olderVehicle)
+			.expect(200);
+	});
+	it('Testing modify vehicle', async () => {
+		const vehicle = {
+			model: 'F-2203',
+			sold: '7777777',
+			connected: '8565557',
+			softwareUpdates: '1574532',
+		};
+
+		expect(vehicle.model).not.toBe(null);
+		expect(vehicle.sold).not.toBe(null);
+		expect(vehicle.connected).not.toBe(null);
+		expect(vehicle.softwareUpdates).not.toBe(null);
+
+		const olderVehicleRes = await request(app).get(`/api/vehicles/${id5}`);
+		olderVehicle = olderVehicleRes.body.Vehicle;
+
+		const res = await request(app)
+			.put(`/api/vehicle/${id5}`)
+			.send(vehicle)
+			.expect(200);
+
+		console.log(`Editing Vehicle ID: ${id5}`);
+
+		expect(res.body.result).toHaveProperty('model', vehicle.model);
+		expect(res.body.result).toHaveProperty('sold', vehicle.sold);
+		expect(res.body.result).toHaveProperty('connected', vehicle.connected);
+		expect(res.body.result).toHaveProperty(
+			'softwareUpdates',
+			vehicle.softwareUpdates
+		);
+	});
+});
