@@ -49,7 +49,7 @@ module.exports = {
 				full_name
 			);
 			json.result = {
-				codigo: userId,
+				id: userId.insertId,
 				name,
 				email,
 				full_name,

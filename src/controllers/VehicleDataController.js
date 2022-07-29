@@ -71,7 +71,7 @@ module.exports = {
 				longitude
 			);
 			json.result = {
-				id: VehicleDataId,
+				id: VehicleDataId.insertId,
 				vin,
 				odometer,
 				tirePressure,

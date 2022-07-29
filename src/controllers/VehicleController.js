@@ -50,7 +50,7 @@ module.exports = {
 				softwareUpdates
 			);
 			json.result = {
-				id: VehicleId,
+				id: VehicleId.insertId,
 				model,
 				sold,
 				connected,

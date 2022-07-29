@@ -22,8 +22,8 @@ class Tabelas {
 		const USER_SCHEMA = `
         CREATE TABLE IF NOT EXISTS USER (
             id INTEGER PRIMARY KEY AUTO_INCREMENT, 
-            name VARCHAR(30) NOT NULL UNIQUE, 
-            email VARCHAR(255) NOT NULL, 
+            name VARCHAR(30) NOT NULL , 
+            email VARCHAR(255) NOT NULL UNIQUE, 
             password VARCHAR(255) NOT NULL,
             full_name VARCHAR(40) NOT NULL, 
             join_date TIMESTAMP DEFAULT current_timestamp
@@ -42,7 +42,7 @@ class Tabelas {
 		const VEHICLE_SCHEMA = `
         CREATE TABLE IF NOT EXISTS VEHICLE (
             id INTEGER PRIMARY KEY AUTO_INCREMENT,
-            model VARCHAR(60) NOT NULL, 
+            model VARCHAR(60) NOT NULL UNIQUE, 
             sold INTEGER NOT NULL,
             connected INTEGER NOT NULL,
             softwareUpdates INTEGER NOT NULL
