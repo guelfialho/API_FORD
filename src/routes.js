@@ -9,7 +9,7 @@ const VehicleDataController = require('./controllers/VehicleDataController');
 router.get('/users', UserController.getUsers); // TESTED
 router.get('/users/:id', UserController.getUserById);
 router.post('/user', UserController.insertUser); // TESTED
-router.put('/user/:id', UserController.modifyUser);
+router.put('/user/:id', UserController.modifyUser); // TESTED
 router.delete('/user/:id', UserController.deleteUser);
 
 // --------------  ROTAS DE VEICULOS -------------------

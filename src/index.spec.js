@@ -230,3 +230,39 @@ describe('Test my POST /api/vehicledata response', () => {
 		expect(res.body).toBeInstanceOf(Object);
 	});
 });
+
+describe('Test my PUT /api/user response', () => {
+	const id4 = 4;
+	let olderUser = '';
+	afterAll(async () => {
+		const responsee = await request(app)
+			.put(`/api/user/${id4}`)
+			.send(olderUser)
+			.expect(200);
+	});
+	it('Testing modify user', async () => {
+		const user = {
+			name: 'JEST5',
+			email: 'fialho55@gmail.com.br',
+			full_name: 'Miguel Fialho5',
+		};
+
+		expect(user.name).not.toBe(null);
+		expect(user.email).not.toBe(null);
+		expect(user.full_name).not.toBe(null);
+
+		const olderUserRes = await request(app).get(`/api/users/${id4}`);
+		olderUser = olderUserRes.body.User;
+
+		const res = await request(app)
+			.put(`/api/user/${id4}`)
+			.send(user)
+			.expect(200);
+
+		console.log(`Editing User ID: ${id4}`);
+
+		expect(res.body.result).toHaveProperty('name', user.name);
+		expect(res.body.result).toHaveProperty('email', user.email);
+		expect(res.body.result).toHaveProperty('full_name', user.full_name);
+	});
+});
