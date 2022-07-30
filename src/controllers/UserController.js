@@ -1,4 +1,5 @@
 const UserService = require('../services/UserService');
+const { genSaltSync, hashSync } = require('bcrypt');
 
 module.exports = {
 	getUsers: async (req, res) => {
@@ -39,7 +40,8 @@ module.exports = {
 		let name = req.body.name;
 		let email = req.body.email;
 		let full_name = req.body.full_name;
-		let password = req.body.password;
+		const salt = genSaltSync(10);
+		let password = hashSync(req.body.password, salt);
 
 		if (name && email && full_name && password) {
 			let userId = await UserService.insertUser(

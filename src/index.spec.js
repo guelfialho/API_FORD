@@ -275,10 +275,11 @@ describe('Test my PUT /api/vehicle response', () => {
 			.put(`/api/vehicle/${id5}`)
 			.send(olderVehicle)
 			.expect(200);
+		console.log(`Older Vehicle test : ${olderVehicle}`);
 	});
 	it('Testing modify vehicle', async () => {
 		const vehicle = {
-			model: 'F-2203',
+			model: 'F-2204',
 			sold: '7777777',
 			connected: '8565557',
 			softwareUpdates: '1574532',
@@ -306,5 +307,78 @@ describe('Test my PUT /api/vehicle response', () => {
 			'softwareUpdates',
 			vehicle.softwareUpdates
 		);
+	});
+});
+
+describe('Test my PUT /api/vehicledata response', () => {
+	const id6 = 3;
+	let olderVehicleData = '';
+	afterAll(async () => {
+		const responsees = await request(app)
+			.put(`/api/vehicledata/${id6}`)
+			.send({
+				vin: olderVehicleData.vin,
+				odometer: olderVehicleData.odometer,
+				tirePressure: olderVehicleData.tirePressure,
+				status: olderVehicleData.status,
+				batteryStatus: olderVehicleData.batteryStatus,
+				fuelLevel: olderVehicleData.fuelLevel,
+				latitude: olderVehicleData.latitude,
+				longitude: olderVehicleData.longitude,
+			})
+			.expect(200);
+		console.log('---------------------------');
+		console.log(olderVehicleData.vin);
+		console.log(olderVehicleData.odometer);
+		console.log(olderVehicleData.tirePressure);
+		console.log(olderVehicleData.status);
+		console.log(olderVehicleData.batteryStatus);
+		console.log(olderVehicleData.fuelLevel);
+		console.log(olderVehicleData.latitude);
+		console.log(olderVehicleData.longitude);
+		console.log('-----------------------');
+	});
+	it('Testing modify vehicle data', async () => {
+		const vehicleData = {
+			vin: '66HHDUYS2Y63MIG99999',
+			odometer: '9517532',
+			tirePressure: '3579512',
+			status: '1574532',
+			baterryStatus: 'F1502',
+			fuelLevel: '9517532',
+			latitude: '3579512',
+			longitude: '1574532',
+		};
+
+		expect(vehicleData.vin).not.toBe(null);
+		expect(vehicleData.odometer).not.toBe(null);
+		expect(vehicleData.tirePressure).not.toBe(null);
+		expect(vehicleData.status).not.toBe(null);
+		expect(vehicleData.baterryStatus).not.toBe(null);
+		expect(vehicleData.fuelLevel).not.toBe(null);
+		expect(vehicleData.latitude).not.toBe(null);
+		expect(vehicleData.longitude).not.toBe(null);
+
+		const olderVehicledataRes = await request(app).get(
+			`/api/vehiclesdata/${id6}`
+		);
+
+		olderVehicleData = olderVehicledataRes.body.VehicleData;
+		console.log(olderVehicleData);
+
+		const res = await request(app)
+			.put(`/api/vehicledata/${id6}`)
+			.send(vehicleData)
+			.expect(200);
+
+		console.log(`Editing VehicleData ID: ${id6}`);
+
+		// expect(res.body.result).toHaveProperty('model', vehicle.model);
+		// expect(res.body.result).toHaveProperty('sold', vehicle.sold);
+		// expect(res.body.result).toHaveProperty('connected', vehicle.connected);
+		// expect(res.body.result).toHaveProperty(
+		// 	'softwareUpdates',
+		// 	vehicle.softwareUpdates
+		// );
 	});
 });

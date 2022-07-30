@@ -32,7 +32,7 @@ module.exports = {
 		if (vehicleData) {
 			json.VehicleData = vehicleData; //se tiver nota ele joga no json
 		} else {
-			json.error = `Não foi possível localizar dados de veículo com id: ${id}`;
+			json.error = `Não foi possível localizar (GET) dados de veículo com id : ${id}`;
 		}
 
 		res.json(json);
@@ -95,7 +95,7 @@ module.exports = {
 		let odometer = req.body.odometer;
 		let tirePressure = req.body.tirePressure;
 		let status = req.body.status;
-		let baterryStatus = req.body.baterryStatus;
+		let batteryStatus = req.body.batteryStatus;
 		let fuelLevel = req.body.fuelLevel;
 		let latitude = req.body.latitude;
 		let longitude = req.body.longitude;
@@ -109,7 +109,7 @@ module.exports = {
 			odometer &&
 			tirePressure &&
 			status &&
-			baterryStatus &&
+			batteryStatus &&
 			fuelLevel &&
 			latitude &&
 			longitude
@@ -120,7 +120,7 @@ module.exports = {
 				odometer,
 				tirePressure,
 				status,
-				baterryStatus,
+				batteryStatus,
 				fuelLevel,
 				latitude,
 				longitude
@@ -131,13 +131,13 @@ module.exports = {
 				odometer,
 				tirePressure,
 				status,
-				baterryStatus,
+				batteryStatus,
 				fuelLevel,
 				latitude,
 				longitude,
 			};
 		} else {
-			json.error = `Não foi posível localizar dados do veículo com id: ${id}`;
+			json.error = `Não foi posível alterar (PUT) dados do veículo com id: ${id}, IDExist: ${!!idExists}, ID: ${!!id}, vin: ${!!vin}, odometer: ${!!odometer}, tirePressure: ${!!tirePressure},status: ${!!status}, baterryStatus: ${batteryStatus}, fuelLevel: ${!!fuelLevel}, latitude: ${!!latitude}, longitude: ${!!longitude}`;
 		}
 		res.json(json);
 	},
