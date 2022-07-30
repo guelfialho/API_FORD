@@ -1,5 +1,6 @@
 const UserService = require('../services/UserService');
-const { genSaltSync, hashSync } = require('bcrypt');
+const { genSaltSync, hashSync, compareSync, compare } = require('bcrypt');
+const jwt = require('jsonwebtoken');
 
 module.exports = {
 	getUsers: async (req, res) => {
@@ -99,5 +100,44 @@ module.exports = {
 		await UserService.deleteUser(req.params.id);
 
 		res.json(json);
+	},
+
+	login: async (req, res) => {
+		// let json = { error: '', result: {} };
+		const body = req.body;
+
+		if (body.password && body.email) {
+			const user = await UserService.getUserByEmail(body.email);
+
+			if (!user) {
+				// json.error = 'Invalid email or password';
+				return res
+					.status(401)
+					.send({ message: 'Invalid email or password' });
+			} else {
+				const authUser = compareSync(body.password, user.password);
+				if (authUser) {
+					user.password = undefined;
+					const jsontoken = jwt.sign(
+						{ result: user },
+						process.env.TOKEN_SECRET,
+						{ expiresIn: '1m' }
+					);
+
+					return res.status(200).send({
+						message: ' Login Successfully',
+						token: jsontoken,
+					});
+				} else {
+					return res
+						.status(401)
+						.send({ message: 'Invalid email or password' });
+				}
+			}
+		} else {
+			return res
+				.status(404)
+				.send({ message: 'Email and password are required' });
+		}
 	},
 };
