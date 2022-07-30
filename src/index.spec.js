@@ -316,27 +316,8 @@ describe('Test my PUT /api/vehicledata response', () => {
 	afterAll(async () => {
 		const responsees = await request(app)
 			.put(`/api/vehicledata/${id6}`)
-			.send({
-				vin: olderVehicleData.vin,
-				odometer: olderVehicleData.odometer,
-				tirePressure: olderVehicleData.tirePressure,
-				status: olderVehicleData.status,
-				batteryStatus: olderVehicleData.batteryStatus,
-				fuelLevel: olderVehicleData.fuelLevel,
-				latitude: olderVehicleData.latitude,
-				longitude: olderVehicleData.longitude,
-			})
+			.send({ olderVehicleData })
 			.expect(200);
-		console.log('---------------------------');
-		console.log(olderVehicleData.vin);
-		console.log(olderVehicleData.odometer);
-		console.log(olderVehicleData.tirePressure);
-		console.log(olderVehicleData.status);
-		console.log(olderVehicleData.batteryStatus);
-		console.log(olderVehicleData.fuelLevel);
-		console.log(olderVehicleData.latitude);
-		console.log(olderVehicleData.longitude);
-		console.log('-----------------------');
 	});
 	it('Testing modify vehicle data', async () => {
 		const vehicleData = {
@@ -364,7 +345,7 @@ describe('Test my PUT /api/vehicledata response', () => {
 		);
 
 		olderVehicleData = olderVehicledataRes.body.VehicleData;
-		console.log(olderVehicleData);
+		// console.log(olderVehicleData);
 
 		const res = await request(app)
 			.put(`/api/vehicledata/${id6}`)
@@ -373,5 +354,32 @@ describe('Test my PUT /api/vehicledata response', () => {
 
 		console.log(res);
 		console.log(`Editing VehicleData ID: ${id6}`);
+
+		expect(res.body.result).toHaveProperty('vin', vehicleData.vin);
+		expect(res.body.result).toHaveProperty(
+			'odometer',
+			vehicleData.odometer
+		);
+		expect(res.body.result).toHaveProperty(
+			'tirePressure',
+			vehicleData.tirePressure
+		);
+		expect(res.body.result).toHaveProperty('status', vehicleData.status);
+		expect(res.body.result).toHaveProperty(
+			'batteryStatus',
+			vehicleData.batteryStatus
+		);
+		expect(res.body.result).toHaveProperty(
+			'fuelLevel',
+			vehicleData.fuelLevel
+		);
+		expect(res.body.result).toHaveProperty(
+			'latitude',
+			vehicleData.latitude
+		);
+		expect(res.body.result).toHaveProperty(
+			'longitude',
+			vehicleData.longitude
+		);
 	});
 });
