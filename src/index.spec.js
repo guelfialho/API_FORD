@@ -344,7 +344,7 @@ describe('Test my PUT /api/vehicledata response', () => {
 			odometer: '9517532',
 			tirePressure: '3579512',
 			status: '1574532',
-			baterryStatus: 'F1502',
+			batteryStatus: 'F1502',
 			fuelLevel: '9517532',
 			latitude: '3579512',
 			longitude: '1574532',
@@ -354,7 +354,7 @@ describe('Test my PUT /api/vehicledata response', () => {
 		expect(vehicleData.odometer).not.toBe(null);
 		expect(vehicleData.tirePressure).not.toBe(null);
 		expect(vehicleData.status).not.toBe(null);
-		expect(vehicleData.baterryStatus).not.toBe(null);
+		expect(vehicleData.batteryStatus).not.toBe(null);
 		expect(vehicleData.fuelLevel).not.toBe(null);
 		expect(vehicleData.latitude).not.toBe(null);
 		expect(vehicleData.longitude).not.toBe(null);
@@ -371,14 +371,7 @@ describe('Test my PUT /api/vehicledata response', () => {
 			.send(vehicleData)
 			.expect(200);
 
+		console.log(res);
 		console.log(`Editing VehicleData ID: ${id6}`);
-
-		// expect(res.body.result).toHaveProperty('model', vehicle.model);
-		// expect(res.body.result).toHaveProperty('sold', vehicle.sold);
-		// expect(res.body.result).toHaveProperty('connected', vehicle.connected);
-		// expect(res.body.result).toHaveProperty(
-		// 	'softwareUpdates',
-		// 	vehicle.softwareUpdates
-		// );
 	});
 });
