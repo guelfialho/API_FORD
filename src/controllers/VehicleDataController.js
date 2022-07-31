@@ -2,12 +2,12 @@ const VehicleDataService = require('../services/VehicleDataService');
 
 module.exports = {
 	getVehicleData: async (req, res) => {
-		let json = { error: '', VehiclesData: [] };
+		let VehiclesData = [];
 
 		let vehiclesData = await VehicleDataService.getVehicleData();
 
 		for (let i in vehiclesData) {
-			json.VehiclesData.push({
+			VehiclesData.push({
 				id: vehiclesData[i].id,
 				vin: vehiclesData[i].vin,
 				odometer: vehiclesData[i].odometer,
@@ -20,22 +20,20 @@ module.exports = {
 			});
 		}
 
-		res.json(json);
+		return res.status(200).json({ VehiclesData });
 	},
 
 	getVehicleDataById: async (req, res) => {
-		let json = { error: '', VehicleData: {} };
-
-		let id = req.params.id; //para pegar o parametro
+		let id = req.params.id; // foi passado o id como parametro na url
 		let vehicleData = await VehicleDataService.getVehicleDataById(id);
 
 		if (vehicleData) {
-			json.VehicleData = vehicleData; //se tiver nota ele joga no json
+			return res.status(200).json({ VehicleData: vehicleData });
 		} else {
-			json.error = `Não foi possível localizar (GET) dados de veículo com id : ${id}`;
+			return res.status(404).json({
+				message: `Not found vehicle with id: ${id}`,
+			});
 		}
-
-		res.json(json);
 	},
 
 	insertVehicleData: async (req, res) => {
