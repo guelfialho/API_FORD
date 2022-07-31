@@ -1,25 +1,50 @@
 const app = require('./index');
 const request = require('supertest');
 
+let token;
+
+beforeAll((done) => {
+	request(app)
+		.post('/api/user/login')
+		.send({
+			email: 'fialho@gmail.com',
+			password: 'miguel',
+		})
+		.end((err, response) => {
+			token = response.body.token; // save the token!
+			done();
+		});
+});
+
 describe('Test my GET /api/users response', () => {
 	it('Response body should be instance of Object', async () => {
-		const res = await request(app).get('/api/users');
+		const res = await request(app)
+			.get('/api/users')
+			.set('Authorization', `Bearer ${token}`);
+
 		expect(res.body).toBeInstanceOf(Object);
+		expect(res.statusCode).toBe(200);
 	});
 
 	it('Response body should get properties', async () => {
-		const res = await request(app).get('/api/users');
+		const res = await request(app)
+			.get('/api/users')
+			.set('Authorization', `Bearer ${token}`);
 		expect(res.body).toHaveProperty('error');
 		expect(res.body).toHaveProperty('Users');
 	});
 
 	it('Property Users should be a instance of Array', async () => {
-		const res = await request(app).get('/api/users');
+		const res = await request(app)
+			.get('/api/users')
+			.set('Authorization', `Bearer ${token}`);
 		expect(res.body.Users).toBeInstanceOf(Array);
 	});
 
 	it('Element of Users array should have properties', async () => {
-		const res = await request(app).get('/api/users');
+		const res = await request(app)
+			.get('/api/users')
+			.set('Authorization', `Bearer ${token}`);
 		expect(res.body.Users[0]).toHaveProperty('id');
 		expect(res.body.Users[0]).toHaveProperty('name');
 		expect(res.body.Users[0]).toHaveProperty('email');
@@ -27,7 +52,9 @@ describe('Test my GET /api/users response', () => {
 	});
 
 	it('Elements of Users array should have properties', async () => {
-		const res = await request(app).get('/api/users');
+		const res = await request(app)
+			.get('/api/users')
+			.set('Authorization', `Bearer ${token}`);
 		const users = res.body.Users;
 
 		for (user of users) {
@@ -39,7 +66,9 @@ describe('Test my GET /api/users response', () => {
 	});
 
 	it('Elements of Users array should not have their properties values empty', async () => {
-		const res = await request(app).get('/api/users');
+		const res = await request(app)
+			.get('/api/users')
+			.set('Authorization', `Bearer ${token}`);
 		const users = res.body.Users;
 
 		for (user of users) {
