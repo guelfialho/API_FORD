@@ -30,7 +30,6 @@ describe('Test my GET /api/users response', () => {
 		const res = await request(app)
 			.get('/api/users')
 			.set('Authorization', `Bearer ${token}`);
-		expect(res.body).toHaveProperty('error');
 		expect(res.body).toHaveProperty('Users');
 	});
 
@@ -131,7 +130,7 @@ describe('Test my GET /api/vehicledata response', () => {
 
 	it('Response body should get properties', async () => {
 		const res = await request(app).get('/api/vehiclesdata');
-		expect(res.body).toHaveProperty('error');
+		// expect(res.body).toHaveProperty('error');
 		expect(res.body).toHaveProperty('VehiclesData');
 	});
 
@@ -194,7 +193,6 @@ describe('Test my POST /api/vehicle response', () => {
 		const res = await request(app).post('/api/vehicle').send(vehicle);
 
 		id = res.body.result.id;
-		console.log(`Insert Vehicle ID: ${id}`);
 
 		expect(res.body).toBeInstanceOf(Object);
 	});
@@ -221,7 +219,6 @@ describe('Test my POST /api/user response', () => {
 		const res = await request(app).post('/api/user').send(user);
 
 		id2 = res.body.result.id;
-		console.log(`Insert User ID: ${id2}`);
 
 		expect(res.body).toBeInstanceOf(Object);
 	});
@@ -254,7 +251,6 @@ describe('Test my POST /api/vehicledata response', () => {
 			.send(vehicledata);
 
 		id3 = res.body.result.id;
-		console.log(`Insert User ID: ${id3}`);
 
 		expect(res.body).toBeInstanceOf(Object);
 	});
@@ -288,8 +284,6 @@ describe('Test my PUT /api/user response', () => {
 			.send(user)
 			.expect(200);
 
-		console.log(`Editing User ID: ${id4}`);
-
 		expect(res.body.result).toHaveProperty('name', user.name);
 		expect(res.body.result).toHaveProperty('email', user.email);
 		expect(res.body.result).toHaveProperty('full_name', user.full_name);
@@ -304,7 +298,6 @@ describe('Test my PUT /api/vehicle response', () => {
 			.put(`/api/vehicle/${id5}`)
 			.send(olderVehicle)
 			.expect(200);
-		console.log(`Older Vehicle test : ${olderVehicle}`);
 	});
 	it('Testing modify vehicle', async () => {
 		const vehicle = {
@@ -326,8 +319,6 @@ describe('Test my PUT /api/vehicle response', () => {
 			.put(`/api/vehicle/${id5}`)
 			.send(vehicle)
 			.expect(200);
-
-		console.log(`Editing Vehicle ID: ${id5}`);
 
 		expect(res.body.result).toHaveProperty('model', vehicle.model);
 		expect(res.body.result).toHaveProperty('sold', vehicle.sold);
@@ -380,9 +371,6 @@ describe('Test my PUT /api/vehicledata response', () => {
 			.put(`/api/vehicledata/${id6}`)
 			.send(vehicleData)
 			.expect(200);
-
-		console.log(res);
-		console.log(`Editing VehicleData ID: ${id6}`);
 
 		expect(res.body.result).toHaveProperty('vin', vehicleData.vin);
 		expect(res.body.result).toHaveProperty(

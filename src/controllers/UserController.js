@@ -4,12 +4,12 @@ const jwt = require('jsonwebtoken');
 
 module.exports = {
 	getUsers: async (req, res) => {
-		let json = { error: '', Users: [] };
+		let UsersArray = [];
 
 		let users = await UserService.getUsers();
 
 		for (let i in users) {
-			json.Users.push({
+			UsersArray.push({
 				id: users[i].id,
 				name: users[i].name,
 				email: users[i].email,
@@ -17,22 +17,24 @@ module.exports = {
 			});
 		}
 
-		res.json(json);
+		if (!users) {
+			res.staus(404).json({ error: 'No users found' });
+		} else {
+			res.status(200).json({ Users: UsersArray });
+		}
 	},
 
 	getUserById: async (req, res) => {
-		let json = { error: '', User: {} };
-
 		let id = req.params.id; //para pegar o parametro
 		let user = await UserService.getUserById(id);
 
 		if (user) {
-			json.User = user; //se tiver nota ele joga no json
+			res.status(200).json({ User: user });
 		} else {
-			json.error = `Não foi possível localizar usuário com id: ${id}`;
+			res.status(404).json({
+				error: `Não foi possível localizar usuário com id: ${id}`,
+			});
 		}
-
-		res.json(json);
 	},
 
 	insertUser: async (req, res) => {
@@ -121,7 +123,7 @@ module.exports = {
 					const jsontoken = jwt.sign(
 						{ result: user },
 						process.env.TOKEN_SECRET,
-						{ expiresIn: '1m' }
+						{ expiresIn: '1h' }
 					);
 
 					return res.status(200).send({
