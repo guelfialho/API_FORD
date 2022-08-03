@@ -63,8 +63,6 @@ module.exports = {
 	},
 
 	modifyVehicle: async (req, res) => {
-		let json = { error: '', result: {} };
-
 		let id = req.params.id;
 		let model = req.body.model;
 		let sold = req.body.sold;
@@ -81,34 +79,35 @@ module.exports = {
 				connected,
 				softwareUpdates
 			);
-			json.result = {
-				id,
-				model,
-				sold,
-				connected,
-				softwareUpdates,
-			};
+			res.status(200).json({
+				message: `${model} successfully edited!`,
+				Vehicle: {
+					id,
+					model,
+					sold,
+					connected,
+					softwareUpdates,
+				},
+			});
 		} else {
-			json.error = `Não foi posível localizar veículo com id: ${id}`;
+			res.status(404).json({
+				error: `Vehicle (id: ${id}) not found.`,
+			});
 		}
-		res.json(json);
 	},
 
 	deleteVehicle: async (req, res) => {
-		let json = { error: '', result: {} };
-
 		let id = req.params.id;
 
 		let vehicle = await VehicleService.getVehicleById(id);
 
 		if (vehicle) {
-			json.result = `Vehicle: ${vehicle.model} successfully deleted! `;
+			await VehicleService.deleteVehicle(req.params.id);
+			res.status(200).json({
+				Vehicle: `${vehicle.model} successfully deleted!`,
+			});
 		} else {
-			json.error = `Não foi possível localizar veículo com id: ${id}`;
+			res.status(404).json({ error: `Vehicle (id: ${id}) not found.` });
 		}
-
-		await VehicleService.deleteVehicle(req.params.id);
-
-		res.json(json);
 	},
 };
