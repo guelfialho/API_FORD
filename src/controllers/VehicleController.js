@@ -1,65 +1,87 @@
 const VehicleService = require('../services/VehicleService');
 
 module.exports = {
-	getVehicle: async (req, res) => {
-		let json = { error: '', Vehicles: [] };
+	getVehicles: async (req, res) => {
+		let VehiclesArray = [];
 
-		let vehicle = await VehicleService.getVehicle();
+		let vehicles = await VehicleService.getVehicles();
 
-		for (let i in vehicle) {
-			json.Vehicles.push({
-				id: vehicle[i].id,
-				model: vehicle[i].model,
-				sold: vehicle[i].sold,
-				connected: vehicle[i].connected,
-				softwareUpdates: vehicle[i].softwareUpdates,
-			});
+		if (!vehicles) {
+			res.staus(404).json({ error: 'No vehicles found' });
+		} else {
+			for (let i in vehicles) {
+				VehiclesArray.push({
+					id: vehicles[i].id,
+					model: vehicles[i].model,
+					sold: vehicles[i].sold,
+					connected: vehicles[i].connected,
+					softwareUpdates: vehicles[i].softwareUpdates,
+				});
+			}
+			res.status(200).json({ Vehicles: VehiclesArray });
 		}
-
-		res.json(json);
 	},
 
 	getVehicleById: async (req, res) => {
-		let json = { error: '', Vehicle: {} };
-
-		let id = req.params.id; //para pegar o parametro
+		let id = req.params.id;
 		let vehicle = await VehicleService.getVehicleById(id);
 
-		if (vehicle) {
-			json.Vehicle = vehicle; //se tiver nota ele joga no json
+		if (!vehicle) {
+			res.status(404).json({ error: `Vehicle (id ${id}) not found.` });
 		} else {
-			json.error = `Não foi possível localizar veículo com id: ${id}`;
+			res.status(200).json({ Vehicle: vehicle });
 		}
-
-		res.json(json);
 	},
 
 	insertVehicle: async (req, res) => {
-		let json = { error: '', result: {} };
-
 		let model = req.body.model;
 		let sold = req.body.sold;
 		let connected = req.body.connected;
 		let softwareUpdates = req.body.softwareUpdates;
 
-		if (model && sold && connected && softwareUpdates) {
+		const vehicleModelExists = await VehicleService.getVehicleByModel(
+			model
+		);
+
+		if (!model) {
+			return res.status(400).json({
+				error: `Model property is required and cannot be empty`,
+			});
+		} else if (vehicleModelExists) {
+			return res.status(400).json({
+				error: `Model already exists. Please update it or insert a new one.`,
+			});
+		} else if (!sold) {
+			return res.status(400).json({
+				error: `Sold property is required and cannot be empty`,
+			});
+		} else if (!connected) {
+			return res.status(400).json({
+				error: `Connected property is required and cannot be empty`,
+			});
+		} else if (!softwareUpdates) {
+			return res.status(400).json({
+				error: `SoftwareUpdates property is required and cannot be empty`,
+			});
+		} else {
 			let VehicleId = await VehicleService.insertVehicle(
 				model,
 				sold,
 				connected,
 				softwareUpdates
 			);
-			json.result = {
-				id: VehicleId.insertId,
-				model,
-				sold,
-				connected,
-				softwareUpdates,
-			};
-		} else {
-			json.error = 'Campos não enviados';
+
+			res.status(200).json({
+				message: `${model} successfully inserted into database`,
+				Vehicle: {
+					id: VehicleId.insertId,
+					model,
+					sold,
+					connected,
+					softwareUpdates,
+				},
+			});
 		}
-		res.json(json);
 	},
 
 	modifyVehicle: async (req, res) => {
@@ -71,7 +93,25 @@ module.exports = {
 
 		let idExists = await VehicleService.getVehicleById(id);
 
-		if (idExists && id && model && sold && connected && softwareUpdates) {
+		if (!idExists) {
+			res.status(404).json({ error: `Vehicle (id ${id}) not found.` });
+		} else if (!model) {
+			return res.status(400).json({
+				error: `Model property is required and cannot be empty`,
+			});
+		} else if (!sold) {
+			return res.status(400).json({
+				error: `Sold property is required and cannot be empty`,
+			});
+		} else if (!connected) {
+			return res.status(400).json({
+				error: `Connected property is required and cannot be empty`,
+			});
+		} else if (!softwareUpdates) {
+			return res.status(400).json({
+				error: `SoftwareUpdates property is required and cannot be empty`,
+			});
+		} else {
 			await VehicleService.modifyVehicle(
 				id,
 				model,
@@ -80,7 +120,7 @@ module.exports = {
 				softwareUpdates
 			);
 			res.status(200).json({
-				message: `${model} successfully edited!`,
+				message: `${model} successfully updated!`,
 				Vehicle: {
 					id,
 					model,
@@ -88,10 +128,6 @@ module.exports = {
 					connected,
 					softwareUpdates,
 				},
-			});
-		} else {
-			res.status(404).json({
-				error: `Vehicle (id: ${id}) not found.`,
 			});
 		}
 	},
@@ -101,13 +137,13 @@ module.exports = {
 
 		let vehicle = await VehicleService.getVehicleById(id);
 
-		if (vehicle) {
+		if (!vehicle) {
+			res.status(404).json({ error: `Vehicle (id: ${id}) not found.` });
+		} else {
 			await VehicleService.deleteVehicle(req.params.id);
 			res.status(200).json({
-				Vehicle: `${vehicle.model} successfully deleted!`,
+				message: `${vehicle.model} successfully deleted!`,
 			});
-		} else {
-			res.status(404).json({ error: `Vehicle (id: ${id}) not found.` });
 		}
 	},
 };

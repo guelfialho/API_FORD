@@ -24,7 +24,7 @@ module.exports = {
 	},
 
 	getUserById: async (req, res) => {
-		let id = req.params.id; //para pegar o parametro
+		let id = req.params.id;
 		let user = await UserService.getUserById(id);
 
 		if (!user) {
@@ -40,6 +40,8 @@ module.exports = {
 		let full_name = req.body.full_name;
 		let password = req.body.password;
 
+		const emailAlreadyExists = await UserService.getUserByEmail(email);
+
 		if (!name) {
 			return res.status(400).json({
 				error: `Name property is required and cannot be empty`,
@@ -47,6 +49,10 @@ module.exports = {
 		} else if (!email) {
 			return res.status(400).json({
 				error: `Email property is required and cannot be empty`,
+			});
+		} else if (emailAlreadyExists) {
+			return res.status(400).json({
+				error: `Email already in use. Please enter a valid email address`,
 			});
 		} else if (!full_name) {
 			return res.status(400).json({
@@ -83,7 +89,6 @@ module.exports = {
 		let email = req.body.email;
 		let full_name = req.body.full_name;
 
-		const emailAlreadyExists = await UserService.getUserByEmail(email);
 		const user = await UserService.getUserById(id);
 
 		if (!user) {
@@ -96,10 +101,6 @@ module.exports = {
 			return res.status(400).json({
 				error: `Email property is required and cannot be empty`,
 			});
-		} else if (emailAlreadyExists) {
-			return res.status(400).json({
-				error: `Email already in use. Please enter a valid email address`,
-			});
 		} else if (!full_name) {
 			return res.status(400).json({
 				error: `Full_name property is required and cannot be empty`,
@@ -107,6 +108,7 @@ module.exports = {
 		} else {
 			await UserService.modifyUser(id, name, email, full_name);
 			res.status(200).json({
+				message: `User (id: ${id} successfully updated)`,
 				User: {
 					id,
 					name,

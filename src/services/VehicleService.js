@@ -1,7 +1,7 @@
 db = require('../infra/connection');
 
 module.exports = {
-	getVehicle: () => {
+	getVehicles: () => {
 		return new Promise((aceito, rejeitado) => {
 			db.query(
 				`SELECT id, model, sold, connected, softwareUpdates FROM vehicle`,
@@ -80,6 +80,26 @@ module.exports = {
 						return;
 					}
 					aceito(results);
+				}
+			);
+		});
+	},
+
+	getVehicleByModel: (model) => {
+		return new Promise((aceito, rejeitado) => {
+			db.query(
+				`SELECT id, model, sold, connected, softwareUpdates FROM vehicle WHERE model = ?`,
+				[model],
+				(error, results) => {
+					if (error) {
+						rejeitado(error);
+						return;
+					}
+					if (results.length > 0) {
+						aceito(results[0]);
+					} else {
+						aceito(false);
+					}
 				}
 			);
 		});
