@@ -9,6 +9,15 @@ const {
 	VehicleSoftwareUpdateslNull,
 } = require('./test/vehicles/vehiclesConstants');
 
+const {
+	UserSuccess,
+	UserEmailAlreadyExists,
+	UserNameNull,
+	UserEmailNull,
+	UserPasswordNull,
+	UserFullNameNull,
+} = require('./test/users/userConstants');
+
 let token;
 
 beforeAll((done) => {
@@ -296,31 +305,107 @@ describe('Test my POST /api/vehicle response', () => {
 	});
 });
 
-// describe('Test my POST /api/user response', () => {
-// 	let id2 = '';
-// 	afterAll(async () => {
-// 		const response2 = await request(app).delete(`/api/user/${id2}`);
-// 	});
-// 	it('Testing insert user', async () => {
-// 		const user = {
-// 			name: 'JEST',
-// 			email: 'fialhomig3@gmail.com.br',
-// 			password: 'teste2',
-// 			full_name: 'Miguel Fialho2',
-// 		};
+describe('Test my POST /api/user response', () => {
+	let id = '';
+	afterAll(async () => {
+		const response2 = await request(app).delete(`/api/user/${id}`);
+	});
+	it('Testing insert user (SUCCESS)', async () => {
+		expect(UserSuccess.name).not.toBe(null);
+		expect(UserSuccess.email).not.toBe(null);
+		expect(UserSuccess.password).not.toBe(null);
+		expect(UserSuccess.full_name).not.toBe(null);
 
-// 		expect(user.name).not.toBe(null);
-// 		expect(user.email).not.toBe(null);
-// 		expect(user.password).not.toBe(null);
-// 		expect(user.full_name).not.toBe(null);
+		const res = await request(app).post('/api/user').send(UserSuccess);
 
-// 		const res = await request(app).post('/api/user').send(user);
+		id = res.body.User.id;
 
-// 		id2 = res.body.result.id;
+		expect(res.statusCode).toBe(200);
+		expect(res.body).toHaveProperty('User');
+		expect(res.body).toBeInstanceOf(Object);
+	});
 
-// 		expect(res.body).toBeInstanceOf(Object);
-// 	});
-// });
+	it('Testing insert user (Error: Email Already Exists)', async () => {
+		expect(UserEmailAlreadyExists.name).not.toBe(null);
+		expect(UserEmailAlreadyExists.email).not.toBe(null);
+		expect(UserEmailAlreadyExists.password).not.toBe(null);
+		expect(UserEmailAlreadyExists.full_name).not.toBe(null);
+
+		const res = await request(app)
+			.post('/api/user')
+			.send(UserEmailAlreadyExists);
+
+		expect(res.statusCode).toBe(400);
+		expect(res.body).toHaveProperty(
+			'error',
+			`Email already in use. Please enter a valid email address`
+		);
+		expect(res.body).toBeInstanceOf(Object);
+	});
+
+	it('Testing insert user (Error: Name is Null)', async () => {
+		expect(UserNameNull).not.toHaveProperty('name');
+		expect(UserNameNull.email).not.toBe(null);
+		expect(UserNameNull.password).not.toBe(null);
+		expect(UserNameNull.full_name).not.toBe(null);
+
+		const res = await request(app).post('/api/user').send(UserNameNull);
+
+		expect(res.statusCode).toBe(400);
+		expect(res.body).toHaveProperty(
+			'error',
+			`Name property is required and cannot be empty`
+		);
+		expect(res.body).toBeInstanceOf(Object);
+	});
+
+	it('Testing insert user (Error: Email is Null)', async () => {
+		expect(UserEmailNull.name).not.toBe(null);
+		expect(UserEmailNull).not.toHaveProperty('email');
+		expect(UserEmailNull.password).not.toBe(null);
+		expect(UserEmailNull.full_name).not.toBe(null);
+
+		const res = await request(app).post('/api/user').send(UserEmailNull);
+
+		expect(res.statusCode).toBe(400);
+		expect(res.body).toHaveProperty(
+			'error',
+			`Email property is required and cannot be empty`
+		);
+		expect(res.body).toBeInstanceOf(Object);
+	});
+	it('Testing insert user (Error: Password is Null)', async () => {
+		expect(UserPasswordNull.name).not.toBe(null);
+		expect(UserPasswordNull.email).not.toBe(null);
+		expect(UserPasswordNull).not.toHaveProperty('password');
+		expect(UserPasswordNull.full_name).not.toBe(null);
+
+		const res = await request(app).post('/api/user').send(UserPasswordNull);
+
+		expect(res.statusCode).toBe(400);
+		expect(res.body).toHaveProperty(
+			'error',
+			`Password property is required and cannot be empty`
+		);
+		expect(res.body).toBeInstanceOf(Object);
+	});
+
+	it('Testing insert user (Error: FullName is Null)', async () => {
+		expect(UserFullNameNull.name).not.toBe(null);
+		expect(UserFullNameNull.email).not.toBe(null);
+		expect(UserFullNameNull.password).not.toBe(null);
+		expect(UserFullNameNull).not.toHaveProperty('full_name');
+
+		const res = await request(app).post('/api/user').send(UserFullNameNull);
+
+		expect(res.statusCode).toBe(400);
+		expect(res.body).toHaveProperty(
+			'error',
+			`Full_name property is required and cannot be empty`
+		);
+		expect(res.body).toBeInstanceOf(Object);
+	});
+});
 
 // describe('Test my POST /api/vehicledata response', () => {
 // 	let id3 = '';
