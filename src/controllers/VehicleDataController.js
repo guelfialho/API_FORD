@@ -6,89 +6,43 @@ module.exports = {
 
 		let vehiclesData = await VehicleDataService.getVehicleData();
 
-		for (let i in vehiclesData) {
-			VehiclesData.push({
-				id: vehiclesData[i].id,
-				vin: vehiclesData[i].vin,
-				odometer: vehiclesData[i].odometer,
-				tirePressure: vehiclesData[i].tirePressure,
-				status: vehiclesData[i].status,
-				baterryStatus: vehiclesData[i].baterryStatus,
-				fuelLevel: vehiclesData[i].fuelLevel,
-				latitude: vehiclesData[i].latitude,
-				longitude: vehiclesData[i].longitude,
+		if (!vehiclesData) {
+			return res.status(400).json({
+				error: `There aren't any vehicle data in the database`,
 			});
-		}
+		} else {
+			for (let i in vehiclesData) {
+				VehiclesData.push({
+					id: vehiclesData[i].id,
+					vin: vehiclesData[i].vin,
+					odometer: vehiclesData[i].odometer,
+					tirePressure: vehiclesData[i].tirePressure,
+					status: vehiclesData[i].status,
+					batteryStatus: vehiclesData[i].batteryStatus,
+					fuelLevel: vehiclesData[i].fuelLevel,
+					latitude: vehiclesData[i].latitude,
+					longitude: vehiclesData[i].longitude,
+				});
+			}
 
-		return res.status(200).json({ VehiclesData });
+			return res.status(200).json({ VehiclesData });
+		}
 	},
 
 	getVehicleDataById: async (req, res) => {
-		let id = req.params.id; // foi passado o id como parametro na url
+		let id = req.params.id;
 		let vehicleData = await VehicleDataService.getVehicleDataById(id);
 
-		if (vehicleData) {
-			return res.status(200).json({ VehicleData: vehicleData });
-		} else {
+		if (!vehicleData) {
 			return res.status(404).json({
-				message: `Not found vehicle with id: ${id}`,
+				message: `Vehicle (id: ${id}) not found`,
 			});
+		} else {
+			return res.status(200).json({ VehicleData: vehicleData });
 		}
 	},
 
 	insertVehicleData: async (req, res) => {
-		let json = { error: '', result: {} };
-
-		let vin = req.body.vin;
-		let odometer = req.body.odometer;
-		let tirePressure = req.body.tirePressure;
-		let status = req.body.status;
-		let baterryStatus = req.body.baterryStatus;
-		let fuelLevel = req.body.fuelLevel;
-		let latitude = req.body.latitude;
-		let longitude = req.body.longitude;
-
-		if (
-			vin &&
-			odometer &&
-			tirePressure &&
-			status &&
-			baterryStatus &&
-			fuelLevel &&
-			latitude &&
-			longitude
-		) {
-			let VehicleDataId = await VehicleDataService.insertVehicleData(
-				vin,
-				odometer,
-				tirePressure,
-				status,
-				baterryStatus,
-				fuelLevel,
-				latitude,
-				longitude
-			);
-			json.result = {
-				id: VehicleDataId.insertId,
-				vin,
-				odometer,
-				tirePressure,
-				status,
-				baterryStatus,
-				fuelLevel,
-				latitude,
-				longitude,
-			};
-		} else {
-			json.error = 'Campos não enviados';
-		}
-		res.json(json);
-	},
-
-	modifyVehicleData: async (req, res) => {
-		let json = { error: '', result: {} };
-
-		let id = req.params.id;
 		let vin = req.body.vin;
 		let odometer = req.body.odometer;
 		let tirePressure = req.body.tirePressure;
@@ -98,20 +52,138 @@ module.exports = {
 		let latitude = req.body.latitude;
 		let longitude = req.body.longitude;
 
-		let idExists = await VehicleDataService.getVehicleDataById(id);
+		let vinAlreadyExists = await VehicleDataService.getVehicleDataByVin(
+			vin
+		);
 
-		if (
-			idExists &&
-			id &&
-			vin &&
-			odometer &&
-			tirePressure &&
-			status &&
-			batteryStatus &&
-			fuelLevel &&
-			latitude &&
-			longitude
-		) {
+		if (!vin) {
+			return res.status(400).json({
+				error: `Vin property is required and cannot be empty`,
+			});
+		} else if (vinAlreadyExists) {
+			return res.status(400).json({
+				error: `Vin already in use. Please enter a valid Vin.`,
+			});
+		} else if (!odometer) {
+			return res.status(400).json({
+				error: `Odometer property is required and cannot be empty`,
+			});
+		} else if (!tirePressure) {
+			return res.status(400).json({
+				error: `TirePressure property is required and cannot be empty`,
+			});
+		} else if (!status) {
+			return res.status(400).json({
+				error: `Status property is required and cannot be empty`,
+			});
+		} else if (!batteryStatus) {
+			return res.status(400).json({
+				error: `BatteryStatus property is required and cannot be empty`,
+			});
+		} else if (!fuelLevel) {
+			return res.status(400).json({
+				error: `FuelLevel property is required and cannot be empty`,
+			});
+		} else if (!latitude) {
+			return res.status(400).json({
+				error: `Latitude property is required and cannot be empty`,
+			});
+		} else if (!longitude) {
+			return res.status(400).json({
+				error: `Longitude property is required and cannot be empty`,
+			});
+		} else {
+			let VehicleDataId = await VehicleDataService.insertVehicleData(
+				vin,
+				odometer,
+				tirePressure,
+				status,
+				batteryStatus,
+				fuelLevel,
+				latitude,
+				longitude
+			);
+			res.status(200).json({
+				message: `${vin} successfully inserted into database`,
+				VehicleData: {
+					id: VehicleDataId.insertId,
+					vin,
+					odometer,
+					tirePressure,
+					status,
+					batteryStatus,
+					fuelLevel,
+					latitude,
+					longitude,
+				},
+			});
+		}
+	},
+
+	modifyVehicleData: async (req, res) => {
+		let id = req.params.id;
+		let vin = req.body.vin;
+		let odometer = req.body.odometer;
+		let tirePressure = req.body.tirePressure;
+		let status = req.body.status;
+		let batteryStatus = req.body.batteryStatus;
+		let fuelLevel = req.body.fuelLevel;
+		let latitude = req.body.latitude;
+		let longitude = req.body.longitude;
+		let verifyVin = false;
+
+		let vinAlreadyExists = await VehicleDataService.getVehicleDataByVin(
+			vin
+		);
+		let vehicleDataExists = await VehicleDataService.getVehicleDataById(id);
+
+		if (vinAlreadyExists) {
+			if (!(vinAlreadyExists.id == id)) {
+				verifyVin = true;
+			}
+		}
+
+		if (!vehicleDataExists) {
+			return res.status(404).json({
+				message: `Vehicle (id: ${id}) not found`,
+			});
+		} else if (!vin) {
+			return res.status(400).json({
+				error: `Vin property is required and cannot be empty`,
+			});
+		} else if (verifyVin) {
+			return res.status(400).json({
+				error: `Vin already in use. Please enter a valid Vin.`,
+			});
+		} else if (!odometer) {
+			return res.status(400).json({
+				error: `Odometer property is required and cannot be empty`,
+			});
+		} else if (!tirePressure) {
+			return res.status(400).json({
+				error: `TirePressure property is required and cannot be empty`,
+			});
+		} else if (!status) {
+			return res.status(400).json({
+				error: `Status property is required and cannot be empty`,
+			});
+		} else if (!batteryStatus) {
+			return res.status(400).json({
+				error: `BatteryStatus property is required and cannot be empty`,
+			});
+		} else if (!fuelLevel) {
+			return res.status(400).json({
+				error: `FuelLevel property is required and cannot be empty`,
+			});
+		} else if (!latitude) {
+			return res.status(400).json({
+				error: `Latitude property is required and cannot be empty`,
+			});
+		} else if (!longitude) {
+			return res.status(400).json({
+				error: `Longitude property is required and cannot be empty`,
+			});
+		} else {
 			await VehicleDataService.modifyVehicleData(
 				id,
 				vin,
@@ -123,38 +195,38 @@ module.exports = {
 				latitude,
 				longitude
 			);
-			json.result = {
-				id,
-				vin,
-				odometer,
-				tirePressure,
-				status,
-				batteryStatus,
-				fuelLevel,
-				latitude,
-				longitude,
-			};
-		} else {
-			json.error = `Não foi posível alterar (PUT) dados do veículo com id: ${id}, IDExist: ${!!idExists}, ID: ${!!id}, vin: ${!!vin}, odometer: ${!!odometer}, tirePressure: ${!!tirePressure},status: ${!!status}, baterryStatus: ${batteryStatus}, fuelLevel: ${!!fuelLevel}, latitude: ${!!latitude}, longitude: ${!!longitude}`;
+
+			res.status(200).json({
+				message: `Vehicle Data (id: ${id}) successfully updated`,
+				VehicleData: {
+					id,
+					vin,
+					odometer,
+					tirePressure,
+					status,
+					batteryStatus,
+					fuelLevel,
+					latitude,
+					longitude,
+				},
+			});
 		}
-		res.json(json);
 	},
 
 	deleteVehicleData: async (req, res) => {
-		let json = { error: '', result: {} };
-
 		let id = req.params.id;
 
 		let vehicleData = await VehicleDataService.getVehicleDataById(id);
 
-		if (vehicleData) {
-			json.result = `Vehicle data: ${vehicleData.vin} successfully deleted! `;
+		if (!vehicleData) {
+			return res.status(404).json({
+				message: `Vehicle (id: ${id}) not found`,
+			});
 		} else {
-			json.error = `Não foi possível localizar dados do veículo com id: ${id}`;
+			await VehicleDataService.deleteVehicleData(req.params.id);
+			res.status(200).json({
+				message: `${vehicleData.vin} successfully deleted!`,
+			});
 		}
-
-		await VehicleDataService.deleteVehicleData(req.params.id);
-
-		res.json(json);
 	},
 };

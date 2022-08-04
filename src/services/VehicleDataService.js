@@ -27,14 +27,7 @@ module.exports = {
 	getVehicleDataById: (id) => {
 		return new Promise((aceito, rejeitado) => {
 			db.query(
-				`SELECT id, vin, 
-                odometer, 
-                tirePressure,
-                status,
-                batteryStatus,
-                fuelLevel,
-                latitude,
-                longitude FROM vehicledata WHERE id = ?`,
+				`SELECT * FROM vehicledata WHERE id = ?`,
 				[id],
 				(error, results) => {
 					if (error) {
@@ -140,6 +133,27 @@ module.exports = {
 						return;
 					}
 					aceito(results);
+				}
+			);
+		});
+	},
+
+	getVehicleDataByVin: (vin) => {
+		return new Promise((aceito, rejeitado) => {
+			db.query(
+				`SELECT * FROM vehicledata WHERE vin = ?`,
+				[vin],
+				(error, results) => {
+					if (error) {
+						rejeitado(error);
+						return;
+					}
+					if (results.length > 0) {
+						//vai verificar se retornou mais de 1 e pegar o 1
+						aceito(results[0]);
+					} else {
+						aceito(false);
+					}
 				}
 			);
 		});
