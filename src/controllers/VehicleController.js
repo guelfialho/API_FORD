@@ -90,14 +90,28 @@ module.exports = {
 		let sold = req.body.sold;
 		let connected = req.body.connected;
 		let softwareUpdates = req.body.softwareUpdates;
+		let verifyModel = false;
 
 		let idExists = await VehicleService.getVehicleById(id);
+		const vehicleModelExists = await VehicleService.getVehicleByModel(
+			model
+		);
+
+		if (vehicleModelExists) {
+			if (!(vehicleModelExists.id == id)) {
+				verifyModel = true;
+			}
+		}
 
 		if (!idExists) {
 			res.status(404).json({ error: `Vehicle (id ${id}) not found.` });
 		} else if (!model) {
 			return res.status(400).json({
 				error: `Model property is required and cannot be empty`,
+			});
+		} else if (verifyModel) {
+			return res.status(400).json({
+				error: `Model already exists. Please insert a new one.`,
 			});
 		} else if (!sold) {
 			return res.status(400).json({

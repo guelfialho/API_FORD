@@ -88,7 +88,7 @@ module.exports = {
 	getVehicleByModel: (model) => {
 		return new Promise((aceito, rejeitado) => {
 			db.query(
-				`SELECT id, model, sold, connected, softwareUpdates FROM vehicle WHERE model = ?`,
+				`SELECT * FROM vehicle WHERE model = ?`,
 				[model],
 				(error, results) => {
 					if (error) {

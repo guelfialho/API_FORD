@@ -88,8 +88,17 @@ module.exports = {
 		let name = req.body.name;
 		let email = req.body.email;
 		let full_name = req.body.full_name;
+		let verifyEmail = false;
 
+		const emailAlreadyExists = await UserService.getUserByEmail(email);
 		const user = await UserService.getUserById(id);
+
+		if (emailAlreadyExists) {
+			if (!(emailAlreadyExists.id == id)) {
+				verifyEmail = true;
+				// Another user cannot modify his own email if someone else has it already
+			}
+		}
 
 		if (!user) {
 			res.status(404).json({ error: `User(id ${id}) not found.` });
@@ -100,6 +109,10 @@ module.exports = {
 		} else if (!email) {
 			return res.status(400).json({
 				error: `Email property is required and cannot be empty`,
+			});
+		} else if (verifyEmail) {
+			return res.status(400).json({
+				error: `Email already in use. Please enter a valid email address`,
 			});
 		} else if (!full_name) {
 			return res.status(400).json({
