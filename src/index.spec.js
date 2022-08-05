@@ -76,6 +76,11 @@ const addUser = function (user) {
 	return res;
 };
 
+const addVehicle = function (vehicle) {
+	const res = request(app).post('/api/vehicle').send(vehicle);
+	return res;
+};
+
 beforeAll((done) => {
 	request(app)
 		.post('/api/user/login')
@@ -240,17 +245,10 @@ describe('Test my GET /api/vehicledata response', () => {
 describe('Test my POST /api/vehicle response', () => {
 	let id = '';
 	afterAll(async () => {
-		const response = await request(app).delete(`/api/vehicle/${id}`);
+		const response = await deleteVehicle(id);
 	});
 	it('Testing insert vehicle (SUCCESS)', async () => {
-		expect(VehicleSuccess.model).not.toBeNull();
-		expect(VehicleSuccess.sold).not.toBe(null);
-		expect(VehicleSuccess.connected).not.toBe(null);
-		expect(VehicleSuccess.softwareUpdates).not.toBe(null);
-
-		const res = await request(app)
-			.post('/api/vehicle')
-			.send(VehicleSuccess);
+		const res = await addVehicle(VehicleSuccess);
 
 		id = res.body.Vehicle.id;
 
@@ -260,14 +258,7 @@ describe('Test my POST /api/vehicle response', () => {
 	});
 
 	it('Testing insert vehicle (Error: Model Already Exists)', async () => {
-		expect(VehicleModelAlreadyExists.model).not.toBe(null);
-		expect(VehicleModelAlreadyExists.sold).not.toBe(null);
-		expect(VehicleModelAlreadyExists.connected).not.toBe(null);
-		expect(VehicleModelAlreadyExists.softwareUpdates).not.toBe(null);
-
-		const res = await request(app)
-			.post('/api/vehicle')
-			.send(VehicleModelAlreadyExists);
+		const res = await addVehicle(VehicleModelAlreadyExists);
 
 		expect(res.statusCode).toBe(400);
 		expect(res.body).toHaveProperty(
@@ -278,14 +269,7 @@ describe('Test my POST /api/vehicle response', () => {
 	});
 
 	it('Testing insert vehicle (Error: Model is Empty)', async () => {
-		expect(VehicleModelNull).not.toHaveProperty('model');
-		expect(VehicleModelNull.sold).not.toBe(null);
-		expect(VehicleModelNull.connected).not.toBe(null);
-		expect(VehicleModelNull.softwareUpdates).not.toBe(null);
-
-		const res = await request(app)
-			.post('/api/vehicle')
-			.send(VehicleModelNull);
+		const res = await addVehicle(VehicleModelNull);
 
 		expect(res.statusCode).toBe(400);
 		expect(res.body).toHaveProperty(
@@ -295,14 +279,7 @@ describe('Test my POST /api/vehicle response', () => {
 	});
 
 	it('Testing insert vehicle (Error: Sold is Empty)', async () => {
-		expect(VehicleSoldlNull.model).not.toBe(null);
-		expect(VehicleSoldlNull).not.toHaveProperty('sold');
-		expect(VehicleSoldlNull.connected).not.toBe(null);
-		expect(VehicleSoldlNull.softwareUpdates).not.toBe(null);
-
-		const res = await request(app)
-			.post('/api/vehicle')
-			.send(VehicleSoldlNull);
+		const res = await addVehicle(VehicleSoldlNull);
 
 		expect(res.statusCode).toBe(400);
 		expect(res.body).toHaveProperty(
@@ -312,14 +289,7 @@ describe('Test my POST /api/vehicle response', () => {
 	});
 
 	it('Testing insert vehicle (Error: Connected is Empty)', async () => {
-		expect(VehicleConnectedlNull.model).not.toBe(null);
-		expect(VehicleConnectedlNull.sold).not.toBe(null);
-		expect(VehicleConnectedlNull).not.toHaveProperty('connected');
-		expect(VehicleConnectedlNull.softwareUpdates).not.toBe(null);
-
-		const res = await request(app)
-			.post('/api/vehicle')
-			.send(VehicleConnectedlNull);
+		const res = await addVehicle(VehicleConnectedlNull);
 
 		expect(res.statusCode).toBe(400);
 		expect(res.body).toHaveProperty(
@@ -329,16 +299,7 @@ describe('Test my POST /api/vehicle response', () => {
 	});
 
 	it('Testing insert vehicle (Error: SoftwareUpdates is Empty)', async () => {
-		expect(VehicleSoftwareUpdateslNull.model).not.toBe(null);
-		expect(VehicleSoftwareUpdateslNull.sold).not.toBe(null);
-		expect(VehicleSoftwareUpdateslNull.connected).not.toBe(null);
-		expect(VehicleSoftwareUpdateslNull).not.toHaveProperty(
-			'softwareUpdates'
-		);
-
-		const res = await request(app)
-			.post('/api/vehicle')
-			.send(VehicleSoftwareUpdateslNull);
+		const res = await addVehicle(VehicleSoftwareUpdateslNull);
 
 		expect(res.statusCode).toBe(400);
 		expect(res.body).toHaveProperty(
