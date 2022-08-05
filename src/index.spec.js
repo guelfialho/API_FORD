@@ -71,6 +71,11 @@ const deleteUser = function (id) {
 	return response;
 };
 
+const addUser = function (user) {
+	const res = request(app).post('/api/user').send(user);
+	return res;
+};
+
 beforeAll((done) => {
 	request(app)
 		.post('/api/user/login')
@@ -346,15 +351,10 @@ describe('Test my POST /api/vehicle response', () => {
 describe('Test my POST /api/user response', () => {
 	let id = '';
 	afterAll(async () => {
-		const response2 = await request(app).delete(`/api/user/${id}`);
+		const response2 = await deleteUser(id);
 	});
 	it('Testing insert user (SUCCESS)', async () => {
-		expect(UserSuccess.name).not.toBe(null);
-		expect(UserSuccess.email).not.toBe(null);
-		expect(UserSuccess.password).not.toBe(null);
-		expect(UserSuccess.full_name).not.toBe(null);
-
-		const res = await request(app).post('/api/user').send(UserSuccess);
+		const res = await addUser(UserSuccess);
 
 		id = res.body.User.id;
 
@@ -364,14 +364,7 @@ describe('Test my POST /api/user response', () => {
 	});
 
 	it('Testing insert user (Error: Email Already Exists)', async () => {
-		expect(UserEmailAlreadyExists.name).not.toBe(null);
-		expect(UserEmailAlreadyExists.email).not.toBe(null);
-		expect(UserEmailAlreadyExists.password).not.toBe(null);
-		expect(UserEmailAlreadyExists.full_name).not.toBe(null);
-
-		const res = await request(app)
-			.post('/api/user')
-			.send(UserEmailAlreadyExists);
+		const res = await addUser(UserEmailAlreadyExists);
 
 		expect(res.statusCode).toBe(400);
 		expect(res.body).toHaveProperty(
@@ -382,12 +375,7 @@ describe('Test my POST /api/user response', () => {
 	});
 
 	it('Testing insert user (Error: Name is Null)', async () => {
-		expect(UserNameNull).not.toHaveProperty('name');
-		expect(UserNameNull.email).not.toBe(null);
-		expect(UserNameNull.password).not.toBe(null);
-		expect(UserNameNull.full_name).not.toBe(null);
-
-		const res = await request(app).post('/api/user').send(UserNameNull);
+		const res = await addUser(UserNameNull);
 
 		expect(res.statusCode).toBe(400);
 		expect(res.body).toHaveProperty(
@@ -398,12 +386,7 @@ describe('Test my POST /api/user response', () => {
 	});
 
 	it('Testing insert user (Error: Email is Null)', async () => {
-		expect(UserEmailNull.name).not.toBe(null);
-		expect(UserEmailNull).not.toHaveProperty('email');
-		expect(UserEmailNull.password).not.toBe(null);
-		expect(UserEmailNull.full_name).not.toBe(null);
-
-		const res = await request(app).post('/api/user').send(UserEmailNull);
+		const res = await addUser(UserEmailNull);
 
 		expect(res.statusCode).toBe(400);
 		expect(res.body).toHaveProperty(
@@ -413,12 +396,7 @@ describe('Test my POST /api/user response', () => {
 		expect(res.body).toBeInstanceOf(Object);
 	});
 	it('Testing insert user (Error: Password is Null)', async () => {
-		expect(UserPasswordNull.name).not.toBe(null);
-		expect(UserPasswordNull.email).not.toBe(null);
-		expect(UserPasswordNull).not.toHaveProperty('password');
-		expect(UserPasswordNull.full_name).not.toBe(null);
-
-		const res = await request(app).post('/api/user').send(UserPasswordNull);
+		const res = await addUser(UserPasswordNull);
 
 		expect(res.statusCode).toBe(400);
 		expect(res.body).toHaveProperty(
@@ -429,12 +407,7 @@ describe('Test my POST /api/user response', () => {
 	});
 
 	it('Testing insert user (Error: FullName is Null)', async () => {
-		expect(UserFullNameNull.name).not.toBe(null);
-		expect(UserFullNameNull.email).not.toBe(null);
-		expect(UserFullNameNull.password).not.toBe(null);
-		expect(UserFullNameNull).not.toHaveProperty('full_name');
-
-		const res = await request(app).post('/api/user').send(UserFullNameNull);
+		const res = await addUser(UserFullNameNull);
 
 		expect(res.statusCode).toBe(400);
 		expect(res.body).toHaveProperty(
