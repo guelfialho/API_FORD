@@ -1,5 +1,6 @@
 const app = require('./index');
 const request = require('supertest');
+
 const {
 	VehicleSuccess,
 	VehicleModelAlreadyExists,
@@ -37,6 +38,39 @@ const {
 
 let token;
 
+const getUsers = function () {
+	const res = request(app)
+		.get('/api/users')
+		.set('Authorization', `Bearer ${token}`);
+
+	return res;
+};
+
+const getVehicles = function () {
+	const res = request(app).get('/api/vehicles');
+	return res;
+};
+
+const getVehicleData = function () {
+	const res = request(app).get('/api/vehiclesdata');
+	return res;
+};
+
+const deleteVehicleData = function (id) {
+	const response = request(app).delete(`/api/vehicledata/${id}`);
+	return response;
+};
+
+const deleteVehicle = function (id) {
+	const response = request(app).delete(`/api/vehicle/${id}`);
+	return response;
+};
+
+const deleteUser = function (id) {
+	const response = request(app).delete(`/api/user/${id}`);
+	return response;
+};
+
 beforeAll((done) => {
 	request(app)
 		.post('/api/user/login')
@@ -52,34 +86,25 @@ beforeAll((done) => {
 
 describe('Test my GET /api/users response', () => {
 	it('Response body should be instance of Object', async () => {
-		const res = await request(app)
-			.get('/api/users')
-			.set('Authorization', `Bearer ${token}`);
-
+		const res = await getUsers();
 		expect(res.body).toBeInstanceOf(Object);
 		expect(res.statusCode).toBe(200);
 	});
 
 	it('Response body should get properties', async () => {
-		const res = await request(app)
-			.get('/api/users')
-			.set('Authorization', `Bearer ${token}`);
+		const res = await getUsers();
 
 		expect(res.body).toHaveProperty('Users');
 	});
 
 	it('Property Users should be a instance of Array', async () => {
-		const res = await request(app)
-			.get('/api/users')
-			.set('Authorization', `Bearer ${token}`);
+		const res = await getUsers();
 
 		expect(res.body.Users).toBeInstanceOf(Array);
 	});
 
 	it('Element of Users array should have properties', async () => {
-		const res = await request(app)
-			.get('/api/users')
-			.set('Authorization', `Bearer ${token}`);
+		const res = await getUsers();
 
 		expect(res.body.Users[0]).toHaveProperty('id');
 		expect(res.body.Users[0]).toHaveProperty('name');
@@ -88,9 +113,7 @@ describe('Test my GET /api/users response', () => {
 	});
 
 	it('Elements of Users array should have properties', async () => {
-		const res = await request(app)
-			.get('/api/users')
-			.set('Authorization', `Bearer ${token}`);
+		const res = await getUsers();
 
 		const users = res.body.Users;
 
@@ -103,9 +126,7 @@ describe('Test my GET /api/users response', () => {
 	});
 
 	it('Elements of Users array should not have their properties values empty', async () => {
-		const res = await request(app)
-			.get('/api/users')
-			.set('Authorization', `Bearer ${token}`);
+		const res = await getUsers();
 
 		const users = res.body.Users;
 
@@ -120,23 +141,23 @@ describe('Test my GET /api/users response', () => {
 
 describe('Test my GET /api/vehicles response', () => {
 	it('Response body should be instance of Object', async () => {
-		const res = await request(app).get('/api/vehicles');
+		const res = await getVehicles();
 		expect(res.body).toBeInstanceOf(Object);
 	});
 
 	it('Response body should get properties', async () => {
-		const res = await request(app).get('/api/vehicles');
+		const res = await getVehicles();
 
 		expect(res.body).toHaveProperty('Vehicles');
 	});
 
 	it('Property Vehicles should be a instance of Array', async () => {
-		const res = await request(app).get('/api/vehicles');
+		const res = await getVehicles();
 		expect(res.body.Vehicles).toBeInstanceOf(Array);
 	});
 
 	it('Elements of Vehicles array should have properties', async () => {
-		const res = await request(app).get('/api/vehicles');
+		const res = await getVehicles();
 		const vehicles = res.body.Vehicles;
 
 		for (vehicle of vehicles) {
@@ -149,7 +170,7 @@ describe('Test my GET /api/vehicles response', () => {
 	});
 
 	it('Elements of Users array should not have their properties values empty', async () => {
-		const res = await request(app).get('/api/vehicles');
+		const res = await getVehicles();
 		const vehicles = res.body.Vehicles;
 
 		for (vehicle of vehicles) {
@@ -163,23 +184,23 @@ describe('Test my GET /api/vehicles response', () => {
 
 describe('Test my GET /api/vehicledata response', () => {
 	it('Response body should be instance of Object', async () => {
-		const res = await request(app).get('/api/vehiclesdata');
+		const res = await getVehicleData();
 		expect(res.body).toBeInstanceOf(Object);
 	});
 
 	it('Response body should get properties', async () => {
-		const res = await request(app).get('/api/vehiclesdata');
+		const res = await getVehicleData();
 
 		expect(res.body).toHaveProperty('VehiclesData');
 	});
 
 	it('Property VehiclesData should be a instance of Array', async () => {
-		const res = await request(app).get('/api/vehiclesdata');
+		const res = await getVehicleData();
 		expect(res.body.VehiclesData).toBeInstanceOf(Array);
 	});
 
 	it('Elements of VehiclesData array should have properties', async () => {
-		const res = await request(app).get('/api/vehiclesdata');
+		const res = await getVehicleData();
 		const vehiclesData = res.body.VehiclesData;
 
 		for (vehicleData of vehiclesData) {
@@ -195,7 +216,7 @@ describe('Test my GET /api/vehicledata response', () => {
 	});
 
 	it('Elements of VehiclesData array should not have their properties values empty', async () => {
-		const res = await request(app).get('/api/vehiclesdata');
+		const res = await getVehicleData();
 		const vehiclesData = res.body.VehiclesData;
 
 		for (vehicleData of vehiclesData) {
@@ -217,7 +238,7 @@ describe('Test my POST /api/vehicle response', () => {
 		const response = await request(app).delete(`/api/vehicle/${id}`);
 	});
 	it('Testing insert vehicle (SUCCESS)', async () => {
-		expect(VehicleSuccess.model).not.toBe(null);
+		expect(VehicleSuccess.model).not.toBeNull();
 		expect(VehicleSuccess.sold).not.toBe(null);
 		expect(VehicleSuccess.connected).not.toBe(null);
 		expect(VehicleSuccess.softwareUpdates).not.toBe(null);
@@ -1173,11 +1194,6 @@ describe('Test my DELETE /api/user response', () => {
 	let id = '';
 	let invalidID = 0;
 	beforeAll(async () => {
-		expect(UserToBeDeleted.name).not.toBe(null);
-		expect(UserToBeDeleted.email).not.toBe(null);
-		expect(UserToBeDeleted.password).not.toBe(null);
-		expect(UserToBeDeleted.full_name).not.toBe(null);
-
 		const res = await request(app).post('/api/user').send(UserToBeDeleted);
 
 		id = res.body.User.id;
@@ -1187,7 +1203,7 @@ describe('Test my DELETE /api/user response', () => {
 	});
 
 	it('Testing delete user (SUCCESS)', async () => {
-		const response = await request(app).delete(`/api/user/${id}`);
+		const response = await deleteUser(id);
 		expect(response.statusCode).toBe(200);
 		expect(response.body).toHaveProperty(
 			'message',
@@ -1196,9 +1212,8 @@ describe('Test my DELETE /api/user response', () => {
 	});
 
 	it('Testing delete user (ERROR: INVALID ID) ', async () => {
-		const verifyDelete = await request(app).delete(
-			`/api/user/${invalidID}`
-		);
+		const verifyDelete = await deleteUser(invalidID);
+
 		expect(verifyDelete.statusCode).toBe(404);
 		expect(verifyDelete.body).toHaveProperty(
 			'error',
@@ -1211,11 +1226,6 @@ describe('Test my DELETE /api/vehicle response', () => {
 	let id = '';
 	let invalidID = 0;
 	beforeAll(async () => {
-		expect(VehicleToBeDeleted.model).not.toBe(null);
-		expect(VehicleToBeDeleted.sold).not.toBe(null);
-		expect(VehicleToBeDeleted.connected).not.toBe(null);
-		expect(VehicleToBeDeleted.softwareUpdates).not.toBe(null);
-
 		const res = await request(app)
 			.post('/api/vehicle')
 			.send(VehicleToBeDeleted);
@@ -1227,7 +1237,8 @@ describe('Test my DELETE /api/vehicle response', () => {
 	});
 
 	it('Deleting vehicle (SUCCESS)', async () => {
-		const response = await request(app).delete(`/api/vehicle/${id}`);
+		const response = await deleteVehicle(id);
+
 		expect(response.statusCode).toBe(200);
 		expect(response.body).toHaveProperty(
 			'message',
@@ -1236,7 +1247,8 @@ describe('Test my DELETE /api/vehicle response', () => {
 	});
 
 	it('Deleting vehicle (ERROR: INVALID ID)', async () => {
-		const response = await request(app).delete(`/api/vehicle/${invalidID}`);
+		const response = await deleteVehicle(invalidID);
+
 		expect(response.statusCode).toBe(404);
 		expect(response.body).toHaveProperty(
 			'error',
@@ -1249,15 +1261,6 @@ describe('Test my DELETE /api/vehicledata response', () => {
 	let id = '';
 	let invalidID = 0;
 	beforeAll(async () => {
-		expect(VD_ToBeDeleted.vin).not.toBe(null);
-		expect(VD_ToBeDeleted.odometer).not.toBe(null);
-		expect(VD_ToBeDeleted.tirePressure).not.toBe(null);
-		expect(VD_ToBeDeleted.status).not.toBe(null);
-		expect(VD_ToBeDeleted.batteryStatus).not.toBe(null);
-		expect(VD_ToBeDeleted.fuelLevel).not.toBe(null);
-		expect(VD_ToBeDeleted.latitude).not.toBe(null);
-		expect(VD_ToBeDeleted.longitude).not.toBe(null);
-
 		const res = await request(app)
 			.post('/api/vehicledata')
 			.send(VD_ToBeDeleted);
@@ -1269,7 +1272,8 @@ describe('Test my DELETE /api/vehicledata response', () => {
 	});
 
 	it('Deleting vehicle data (SUCCESS)', async () => {
-		const response = await request(app).delete(`/api/vehicledata/${id}`);
+		const response = await deleteVehicleData(id);
+
 		expect(response.statusCode).toBe(200);
 		expect(response.body).toHaveProperty(
 			'message',
@@ -1278,9 +1282,8 @@ describe('Test my DELETE /api/vehicledata response', () => {
 	});
 
 	it('Deleting vehicle data (ERROR: INVALID ID)', async () => {
-		const response = await request(app).delete(
-			`/api/vehicledata/${invalidID}`
-		);
+		const response = await deleteVehicleData(invalidID);
+
 		expect(response.statusCode).toBe(404);
 		expect(response.body).toHaveProperty(
 			'error',

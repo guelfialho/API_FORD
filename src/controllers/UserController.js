@@ -1,5 +1,5 @@
 const UserService = require('../services/UserService');
-const { genSaltSync, hashSync, compareSync, compare } = require('bcrypt');
+const { genSaltSync, hashSync, compareSync } = require('bcrypt');
 const jwt = require('jsonwebtoken');
 
 module.exports = {
