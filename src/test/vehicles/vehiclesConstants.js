@@ -36,6 +36,13 @@ const VehicleSoftwareUpdateslNull = {
 	connected: '3579512',
 };
 
+const VehicleToBeDeleted = {
+	model: 'T-DEL01',
+	sold: '9517532',
+	connected: '3579512',
+	softwareUpdates: '1574532',
+};
+
 module.exports = {
 	VehicleSuccess,
 	VehicleModelAlreadyExists,
@@ -43,4 +50,5 @@ module.exports = {
 	VehicleSoldlNull,
 	VehicleConnectedlNull,
 	VehicleSoftwareUpdateslNull,
+	VehicleToBeDeleted,
 };

@@ -106,6 +106,17 @@ const VD_LongitudeNull = {
 	latitude: '3579512',
 };
 
+const VD_ToBeDeleted = {
+	vin: 'DELETELS2Y63NHD22554',
+	odometer: '9517532',
+	tirePressure: '3579512',
+	status: '1574532',
+	batteryStatus: 'F-1502',
+	fuelLevel: '9517532',
+	latitude: '3579512',
+	longitude: '1574532',
+};
+
 module.exports = {
 	VD_success,
 	VD_VinAlreadyExists,
@@ -117,4 +128,5 @@ module.exports = {
 	VD_FuelLevelNull,
 	VD_LatitudeNull,
 	VD_LongitudeNull,
+	VD_ToBeDeleted,
 };

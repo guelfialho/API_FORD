@@ -220,7 +220,7 @@ module.exports = {
 
 		if (!vehicleData) {
 			return res.status(404).json({
-				message: `Vehicle (id: ${id}) not found`,
+				error: `Vehicle data (id: ${id}) not found`,
 			});
 		} else {
 			await VehicleDataService.deleteVehicleData(req.params.id);

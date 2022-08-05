@@ -42,10 +42,11 @@ const updateUserSuccess = {
 	full_name: 'Miguel Fialho2',
 };
 
-const UserID2 = {
-	name: 'teste',
-	email: 'teste@ford.com',
-	full_name: 'Teste',
+const UserToBeDeleted = {
+	name: 'DELETE',
+	email: 'deleteTeste@gmail.com.br',
+	password: 'teste2',
+	full_name: 'DELETE TEST',
 };
 
 module.exports = {
@@ -56,5 +57,5 @@ module.exports = {
 	UserPasswordNull,
 	UserFullNameNull,
 	updateUserSuccess,
-	UserID2,
+	UserToBeDeleted,
 };

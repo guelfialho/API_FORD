@@ -7,6 +7,7 @@ const {
 	VehicleSoldlNull,
 	VehicleConnectedlNull,
 	VehicleSoftwareUpdateslNull,
+	VehicleToBeDeleted,
 } = require('./test/vehicles/vehiclesConstants');
 
 const {
@@ -17,7 +18,7 @@ const {
 	UserPasswordNull,
 	UserFullNameNull,
 	updateUserSuccess,
-	UserID2,
+	UserToBeDeleted,
 } = require('./test/users/userConstants');
 
 const {
@@ -31,6 +32,7 @@ const {
 	VD_FuelLevelNull,
 	VD_LatitudeNull,
 	VD_LongitudeNull,
+	VD_ToBeDeleted,
 } = require('./test/vehiclesData/vehiclesDataConstants');
 
 let token;
@@ -1167,66 +1169,122 @@ describe('Test my PUT /api/vehicledata response', () => {
 	});
 });
 
-// describe('Test my DELETE /api/user response', () => {
-// 	let id = '';
-// 	beforeAll(async () => {
-// 		const user = {
-// 			name: 'DELETE',
-// 			email: 'deleteTeste@gmail.com.br',
-// 			password: 'teste2',
-// 			full_name: 'DELETE TEST',
-// 		};
+describe('Test my DELETE /api/user response', () => {
+	let id = '';
+	let invalidID = 0;
+	beforeAll(async () => {
+		expect(UserToBeDeleted.name).not.toBe(null);
+		expect(UserToBeDeleted.email).not.toBe(null);
+		expect(UserToBeDeleted.password).not.toBe(null);
+		expect(UserToBeDeleted.full_name).not.toBe(null);
 
-// 		expect(user.name).not.toBe(null);
-// 		expect(user.email).not.toBe(null);
-// 		expect(user.password).not.toBe(null);
-// 		expect(user.full_name).not.toBe(null);
+		const res = await request(app).post('/api/user').send(UserToBeDeleted);
 
-// 		const res = await request(app).post('/api/user').send(user);
+		id = res.body.User.id;
 
-// 		id = res.body.result.id;
+		expect(id).not.toBe(null);
+		expect(res.body).toBeInstanceOf(Object);
+	});
 
-// 		expect(id).not.toBe(null);
-// 		expect(res.body).toBeInstanceOf(Object);
-// 	});
-// 	afterAll(async () => {
-// 		const verify = await request(app).delete(`/api/user/${id}`);
-// 		expect(verify.statusCode).toBe(404);
-// 	});
-// 	it('Testing delete user', async () => {
-// 		const response = await request(app).delete(`/api/user/${id}`);
-// 		expect(response.statusCode).toBe(200);
-// 	});
-// });
+	it('Testing delete user (SUCCESS)', async () => {
+		const response = await request(app).delete(`/api/user/${id}`);
+		expect(response.statusCode).toBe(200);
+		expect(response.body).toHaveProperty(
+			'message',
+			`User id: ${id} successfuly deleted`
+		);
+	});
 
-// describe('Test my DELETE /api/vehicle response', () => {
-// 	let id = '';
-// 	beforeAll(async () => {
-// 		const vehicle = {
-// 			model: 'T-DEL01',
-// 			sold: '9517532',
-// 			connected: '3579512',
-// 			softwareUpdates: '1574532',
-// 		};
+	it('Testing delete user (ERROR: INVALID ID) ', async () => {
+		const verifyDelete = await request(app).delete(
+			`/api/user/${invalidID}`
+		);
+		expect(verifyDelete.statusCode).toBe(404);
+		expect(verifyDelete.body).toHaveProperty(
+			'error',
+			`User(id ${invalidID}) not found.`
+		);
+	});
+});
 
-// 		expect(vehicle.name).not.toBe(null);
-// 		expect(vehicle.email).not.toBe(null);
-// 		expect(vehicle.password).not.toBe(null);
-// 		expect(vehicle.full_name).not.toBe(null);
+describe('Test my DELETE /api/vehicle response', () => {
+	let id = '';
+	let invalidID = 0;
+	beforeAll(async () => {
+		expect(VehicleToBeDeleted.model).not.toBe(null);
+		expect(VehicleToBeDeleted.sold).not.toBe(null);
+		expect(VehicleToBeDeleted.connected).not.toBe(null);
+		expect(VehicleToBeDeleted.softwareUpdates).not.toBe(null);
 
-// 		const res = await request(app).post('/api/vehicle').send(vehicle);
+		const res = await request(app)
+			.post('/api/vehicle')
+			.send(VehicleToBeDeleted);
 
-// 		id = res.body.result.id;
+		id = res.body.Vehicle.id;
 
-// 		expect(id).not.toBe(null);
-// 		expect(res.body).toBeInstanceOf(Object);
-// 	});
-// 	afterAll(async () => {
-// 		const verify = await request(app).delete(`/api/vehicle/${id}`);
-// 		expect(verify.statusCode).toBe(404);
-// 	});
-// 	it('Deleting vehicle ', async () => {
-// 		const response = await request(app).delete(`/api/vehicle/${id}`);
-// 		expect(response.statusCode).toBe(200);
-// 	});
-// });
+		expect(id).not.toBe(null);
+		expect(res.body).toBeInstanceOf(Object);
+	});
+
+	it('Deleting vehicle (SUCCESS)', async () => {
+		const response = await request(app).delete(`/api/vehicle/${id}`);
+		expect(response.statusCode).toBe(200);
+		expect(response.body).toHaveProperty(
+			'message',
+			`${VehicleToBeDeleted.model} successfully deleted!`
+		);
+	});
+
+	it('Deleting vehicle (ERROR: INVALID ID)', async () => {
+		const response = await request(app).delete(`/api/vehicle/${invalidID}`);
+		expect(response.statusCode).toBe(404);
+		expect(response.body).toHaveProperty(
+			'error',
+			`Vehicle (id: ${invalidID}) not found.`
+		);
+	});
+});
+
+describe('Test my DELETE /api/vehicledata response', () => {
+	let id = '';
+	let invalidID = 0;
+	beforeAll(async () => {
+		expect(VD_ToBeDeleted.vin).not.toBe(null);
+		expect(VD_ToBeDeleted.odometer).not.toBe(null);
+		expect(VD_ToBeDeleted.tirePressure).not.toBe(null);
+		expect(VD_ToBeDeleted.status).not.toBe(null);
+		expect(VD_ToBeDeleted.batteryStatus).not.toBe(null);
+		expect(VD_ToBeDeleted.fuelLevel).not.toBe(null);
+		expect(VD_ToBeDeleted.latitude).not.toBe(null);
+		expect(VD_ToBeDeleted.longitude).not.toBe(null);
+
+		const res = await request(app)
+			.post('/api/vehicledata')
+			.send(VD_ToBeDeleted);
+
+		id = res.body.VehicleData.id;
+
+		expect(id).not.toBe(null);
+		expect(res.body).toBeInstanceOf(Object);
+	});
+
+	it('Deleting vehicle data (SUCCESS)', async () => {
+		const response = await request(app).delete(`/api/vehicledata/${id}`);
+		expect(response.statusCode).toBe(200);
+		expect(response.body).toHaveProperty(
+			'message',
+			`${VD_ToBeDeleted.vin} successfully deleted!`
+		);
+	});
+
+	it('Deleting vehicle data (ERROR: INVALID ID)', async () => {
+		const response = await request(app).delete(
+			`/api/vehicledata/${invalidID}`
+		);
+		expect(response.statusCode).toBe(404);
+		expect(response.body).toHaveProperty(
+			'error',
+			`Vehicle data (id: ${invalidID}) not found`
+		);
+	});
+});
