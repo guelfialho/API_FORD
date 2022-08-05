@@ -1,10 +1,13 @@
+const { genSaltSync, hashSync } = require('bcrypt');
+
 class Tabelas {
 	init(connection) {
 		this.connection = connection;
 		this.createUserTable();
 		this.createVehicleTable();
 		this.createVehicleDataTable();
-		this.insertVehicle('Ranger', 145760, 70000, 27550);
+		this.insertVehicle('Ranger', 222760, 25000, 22550);
+		this.insertVehicle('Bronco', 145760, 70000, 27550);
 		this.insertVehicleData(
 			'2FRHDUYS2Y63NHD22454',
 			'23344',
@@ -15,7 +18,18 @@ class Tabelas {
 			'-12,2322',
 			'-35,2314'
 		);
+		this.insertVehicleData(
+			'5555DUYS2Y63NHD22454',
+			'23344',
+			'36,36,35,34',
+			'on',
+			'Ok',
+			'76',
+			'-12,2322',
+			'-35,2314'
+		);
 		this.insertUser('admin', 'admin@ford.com', '123456', 'Admin');
+		this.insertUser('teste', 'teste@ford.com', '123456', 'Teste');
 	}
 
 	createUserTable() {
@@ -131,6 +145,9 @@ class Tabelas {
 	}
 
 	insertUser(name, email, password, full_name) {
+		const salt = genSaltSync(10);
+		password = hashSync(password, salt);
+
 		const INSERT_USER = `
 		INSERT INTO user (
     		name, 

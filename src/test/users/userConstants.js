@@ -36,6 +36,18 @@ const UserFullNameNull = {
 	email: 'UserFullNameNull@ford.com',
 };
 
+const updateUserSuccess = {
+	name: 'UserSuccess',
+	email: 'UserSuccess@gmail.com.br',
+	full_name: 'Miguel Fialho2',
+};
+
+const UserID2 = {
+	name: 'teste',
+	email: 'teste@ford.com',
+	full_name: 'Teste',
+};
+
 module.exports = {
 	UserSuccess,
 	UserEmailAlreadyExists,
@@ -43,4 +55,6 @@ module.exports = {
 	UserEmailNull,
 	UserPasswordNull,
 	UserFullNameNull,
+	updateUserSuccess,
+	UserID2,
 };
