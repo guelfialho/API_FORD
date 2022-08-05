@@ -81,6 +81,11 @@ const addVehicle = function (vehicle) {
 	return res;
 };
 
+const addVehicleData = function (vehicleData) {
+	const res = request(app).post('/api/vehicledata').send(vehicleData);
+	return res;
+};
+
 beforeAll((done) => {
 	request(app)
 		.post('/api/user/login')
@@ -382,21 +387,10 @@ describe('Test my POST /api/user response', () => {
 describe('Test my POST /api/vehicledata response', () => {
 	let id = '';
 	afterAll(async () => {
-		const response = await request(app).delete(`/api/vehicledata/${id}`);
+		const response = await deleteVehicleData(id);
 	});
 	it('Testing insert vehicledata (SUCCESS)', async () => {
-		expect(VD_success.vin).not.toBe(null);
-		expect(VD_success.odometer).not.toBe(null);
-		expect(VD_success.tirePressure).not.toBe(null);
-		expect(VD_success.status).not.toBe(null);
-		expect(VD_success.batteryStatus).not.toBe(null);
-		expect(VD_success.fuelLevel).not.toBe(null);
-		expect(VD_success.latitude).not.toBe(null);
-		expect(VD_success.longitude).not.toBe(null);
-
-		const res = await request(app)
-			.post('/api/vehicledata')
-			.send(VD_success);
+		const res = await addVehicleData(VD_success);
 
 		id = res.body.VehicleData.id;
 
@@ -406,18 +400,7 @@ describe('Test my POST /api/vehicledata response', () => {
 	});
 
 	it('Testing insert vehicledata (Error: Vin Already Exists)', async () => {
-		expect(VD_VinAlreadyExists.vin).not.toBe(null);
-		expect(VD_VinAlreadyExists.odometer).not.toBe(null);
-		expect(VD_VinAlreadyExists.tirePressure).not.toBe(null);
-		expect(VD_VinAlreadyExists.status).not.toBe(null);
-		expect(VD_VinAlreadyExists.batteryStatus).not.toBe(null);
-		expect(VD_VinAlreadyExists.fuelLevel).not.toBe(null);
-		expect(VD_VinAlreadyExists.latitude).not.toBe(null);
-		expect(VD_VinAlreadyExists.longitude).not.toBe(null);
-
-		const res = await request(app)
-			.post('/api/vehicledata')
-			.send(VD_VinAlreadyExists);
+		const res = await addVehicleData(VD_VinAlreadyExists);
 
 		expect(res.statusCode).toBe(400);
 		expect(res.body).toHaveProperty(
@@ -428,18 +411,7 @@ describe('Test my POST /api/vehicledata response', () => {
 	});
 
 	it('Testing insert vehicledata (Error: Vin is Null)', async () => {
-		expect(VD_VinNull).not.toHaveProperty('vin');
-		expect(VD_VinNull.odometer).not.toBe(null);
-		expect(VD_VinNull.tirePressure).not.toBe(null);
-		expect(VD_VinNull.status).not.toBe(null);
-		expect(VD_VinNull.batteryStatus).not.toBe(null);
-		expect(VD_VinNull.fuelLevel).not.toBe(null);
-		expect(VD_VinNull.latitude).not.toBe(null);
-		expect(VD_VinNull.longitude).not.toBe(null);
-
-		const res = await request(app)
-			.post('/api/vehicledata')
-			.send(VD_VinNull);
+		const res = await addVehicleData(VD_VinNull);
 
 		expect(res.statusCode).toBe(400);
 		expect(res.body).toHaveProperty(
@@ -450,18 +422,7 @@ describe('Test my POST /api/vehicledata response', () => {
 	});
 
 	it('Testing insert vehicledata (Error: Odometer is Null)', async () => {
-		expect(VD_OdometerNull.vin).not.toBe(null);
-		expect(VD_OdometerNull).not.toHaveProperty('odometer');
-		expect(VD_OdometerNull.tirePressure).not.toBe(null);
-		expect(VD_OdometerNull.status).not.toBe(null);
-		expect(VD_OdometerNull.batteryStatus).not.toBe(null);
-		expect(VD_OdometerNull.fuelLevel).not.toBe(null);
-		expect(VD_OdometerNull.latitude).not.toBe(null);
-		expect(VD_OdometerNull.longitude).not.toBe(null);
-
-		const res = await request(app)
-			.post('/api/vehicledata')
-			.send(VD_OdometerNull);
+		const res = await addVehicleData(VD_OdometerNull);
 
 		expect(res.statusCode).toBe(400);
 		expect(res.body).toHaveProperty(
@@ -472,18 +433,7 @@ describe('Test my POST /api/vehicledata response', () => {
 	});
 
 	it('Testing insert vehicledata (Error: TirePressure is Null)', async () => {
-		expect(VD_TirePressureNull.vin).not.toBe(null);
-		expect(VD_TirePressureNull.odometer).not.toBe(null);
-		expect(VD_TirePressureNull).not.toHaveProperty('tirePressure');
-		expect(VD_TirePressureNull.status).not.toBe(null);
-		expect(VD_TirePressureNull.batteryStatus).not.toBe(null);
-		expect(VD_TirePressureNull.fuelLevel).not.toBe(null);
-		expect(VD_TirePressureNull.latitude).not.toBe(null);
-		expect(VD_TirePressureNull.longitude).not.toBe(null);
-
-		const res = await request(app)
-			.post('/api/vehicledata')
-			.send(VD_TirePressureNull);
+		const res = await addVehicleData(VD_TirePressureNull);
 
 		expect(res.statusCode).toBe(400);
 		expect(res.body).toHaveProperty(
@@ -494,18 +444,7 @@ describe('Test my POST /api/vehicledata response', () => {
 	});
 
 	it('Testing insert vehicledata (Error: Status is Null)', async () => {
-		expect(VD_StatusNull.vin).not.toBe(null);
-		expect(VD_StatusNull.odometer).not.toBe(null);
-		expect(VD_StatusNull.tirePressure).not.toBe(null);
-		expect(VD_StatusNull).not.toHaveProperty('status');
-		expect(VD_StatusNull.batteryStatus).not.toBe(null);
-		expect(VD_StatusNull.fuelLevel).not.toBe(null);
-		expect(VD_StatusNull.latitude).not.toBe(null);
-		expect(VD_StatusNull.longitude).not.toBe(null);
-
-		const res = await request(app)
-			.post('/api/vehicledata')
-			.send(VD_StatusNull);
+		const res = await addVehicleData(VD_StatusNull);
 
 		expect(res.statusCode).toBe(400);
 		expect(res.body).toHaveProperty(
@@ -516,18 +455,7 @@ describe('Test my POST /api/vehicledata response', () => {
 	});
 
 	it('Testing insert vehicledata (Error: BatteryStatus is Null)', async () => {
-		expect(VD_BatteryStatusNull.vin).not.toBe(null);
-		expect(VD_BatteryStatusNull.odometer).not.toBe(null);
-		expect(VD_BatteryStatusNull.tirePressure).not.toBe(null);
-		expect(VD_BatteryStatusNull.status).not.toBe(null);
-		expect(VD_BatteryStatusNull).not.toHaveProperty('batteryStatus');
-		expect(VD_BatteryStatusNull.fuelLevel).not.toBe(null);
-		expect(VD_BatteryStatusNull.latitude).not.toBe(null);
-		expect(VD_BatteryStatusNull.longitude).not.toBe(null);
-
-		const res = await request(app)
-			.post('/api/vehicledata')
-			.send(VD_BatteryStatusNull);
+		const res = await addVehicleData(VD_BatteryStatusNull);
 
 		expect(res.statusCode).toBe(400);
 		expect(res.body).toHaveProperty(
@@ -538,18 +466,7 @@ describe('Test my POST /api/vehicledata response', () => {
 	});
 
 	it('Testing insert vehicledata (Error: FuelLevel is Null)', async () => {
-		expect(VD_FuelLevelNull.vin).not.toBe(null);
-		expect(VD_FuelLevelNull.odometer).not.toBe(null);
-		expect(VD_FuelLevelNull.tirePressure).not.toBe(null);
-		expect(VD_FuelLevelNull.status).not.toBe(null);
-		expect(VD_FuelLevelNull.batteryStatus).not.toBe(null);
-		expect(VD_FuelLevelNull).not.toHaveProperty('fuelLevel');
-		expect(VD_FuelLevelNull.latitude).not.toBe(null);
-		expect(VD_FuelLevelNull.longitude).not.toBe(null);
-
-		const res = await request(app)
-			.post('/api/vehicledata')
-			.send(VD_FuelLevelNull);
+		const res = await addVehicleData(VD_FuelLevelNull);
 
 		expect(res.statusCode).toBe(400);
 		expect(res.body).toHaveProperty(
@@ -560,18 +477,7 @@ describe('Test my POST /api/vehicledata response', () => {
 	});
 
 	it('Testing insert vehicledata (Error: Latitude is Null)', async () => {
-		expect(VD_LatitudeNull.vin).not.toBe(null);
-		expect(VD_LatitudeNull.odometer).not.toBe(null);
-		expect(VD_LatitudeNull.tirePressure).not.toBe(null);
-		expect(VD_LatitudeNull.status).not.toBe(null);
-		expect(VD_LatitudeNull.batteryStatus).not.toBe(null);
-		expect(VD_LatitudeNull.fuelLevel).not.toBe(null);
-		expect(VD_LatitudeNull).not.toHaveProperty('latitude');
-		expect(VD_LatitudeNull.longitude).not.toBe(null);
-
-		const res = await request(app)
-			.post('/api/vehicledata')
-			.send(VD_LatitudeNull);
+		const res = await addVehicleData(VD_LatitudeNull);
 
 		expect(res.statusCode).toBe(400);
 		expect(res.body).toHaveProperty(
@@ -582,18 +488,7 @@ describe('Test my POST /api/vehicledata response', () => {
 	});
 
 	it('Testing insert vehicledata (Error: Longitude is Null)', async () => {
-		expect(VD_LongitudeNull.vin).not.toBe(null);
-		expect(VD_LongitudeNull.odometer).not.toBe(null);
-		expect(VD_LongitudeNull.tirePressure).not.toBe(null);
-		expect(VD_LongitudeNull.status).not.toBe(null);
-		expect(VD_LongitudeNull.batteryStatus).not.toBe(null);
-		expect(VD_LongitudeNull.fuelLevel).not.toBe(null);
-		expect(VD_LongitudeNull.latitude).not.toBe(null);
-		expect(VD_LongitudeNull).not.toHaveProperty('longitude');
-
-		const res = await request(app)
-			.post('/api/vehicledata')
-			.send(VD_LongitudeNull);
+		const res = await addVehicleData(VD_LongitudeNull);
 
 		expect(res.statusCode).toBe(400);
 		expect(res.body).toHaveProperty(
