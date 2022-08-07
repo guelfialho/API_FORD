@@ -169,11 +169,10 @@ module.exports = {
 						.send({ message: 'Invalid email or password' });
 				} else {
 					user.password = undefined;
-					const jsontoken = jwt.sign(
-						{ result: user },
-						process.env.TOKEN_SECRET,
-						{ expiresIn: '1h' }
-					);
+					user.join_date = undefined;
+					const jsontoken = jwt.sign(user, process.env.TOKEN_SECRET, {
+						expiresIn: '1h',
+					});
 
 					return res.status(200).send({
 						message: ' Login Successfully',

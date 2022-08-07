@@ -56,21 +56,6 @@ const getVehicleData = function () {
 	return res;
 };
 
-const deleteVehicleData = function (id) {
-	const response = request(app).delete(`/api/vehicledata/${id}`);
-	return response;
-};
-
-const deleteVehicle = function (id) {
-	const response = request(app).delete(`/api/vehicle/${id}`);
-	return response;
-};
-
-const deleteUser = function (id) {
-	const response = request(app).delete(`/api/user/${id}`);
-	return response;
-};
-
 const addUser = function (user) {
 	const res = request(app).post('/api/user').send(user);
 	return res;
@@ -84,6 +69,27 @@ const addVehicle = function (vehicle) {
 const addVehicleData = function (vehicleData) {
 	const res = request(app).post('/api/vehicledata').send(vehicleData);
 	return res;
+};
+
+const updateUser = function (user) {};
+
+const updateVehicle = function (vehicle) {};
+
+const updateVehicleData = function (vehicleData) {};
+
+const deleteVehicleData = function (id) {
+	const response = request(app).delete(`/api/vehicledata/${id}`);
+	return response;
+};
+
+const deleteVehicle = function (id) {
+	const response = request(app).delete(`/api/vehicle/${id}`);
+	return response;
+};
+
+const deleteUser = function (id) {
+	const response = request(app).delete(`/api/user/${id}`);
+	return response;
 };
 
 beforeAll((done) => {
