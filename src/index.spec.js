@@ -20,6 +20,7 @@ const {
 	UserFullNameNull,
 	updateUserSuccess,
 	UserToBeDeleted,
+	insertUpdateUser,
 } = require('./test/users/userConstants');
 
 const {
@@ -39,46 +40,63 @@ const {
 let token;
 
 const getUsers = function () {
-	const res = request(app)
-		.get('/api/users')
-		.set('Authorization', `Bearer ${token}`);
+	const res = request(app).get('/api/users').set('x-access-token', token);
 
 	return res;
 };
 
 const getVehicles = function () {
-	const res = request(app).get('/api/vehicles');
+	const res = request(app).get('/api/vehicles').set('x-access-token', token);
 	return res;
 };
 
 const getVehicleData = function () {
-	const res = request(app).get('/api/vehiclesdata');
+	const res = request(app)
+		.get('/api/vehiclesdata')
+		.set('x-access-token', token);
 	return res;
 };
 
 const addUser = function (user) {
-	const res = request(app).post('/api/user').send(user);
+	const res = request(app)
+		.post('/api/user')
+		.send(user)
+		.set('x-access-token', token);
 	return res;
 };
 
 const addVehicle = function (vehicle) {
-	const res = request(app).post('/api/vehicle').send(vehicle);
+	const res = request(app)
+		.post('/api/vehicle')
+		.send(vehicle)
+		.set('x-access-token', token);
 	return res;
 };
 
 const addVehicleData = function (vehicleData) {
-	const res = request(app).post('/api/vehicledata').send(vehicleData);
+	const res = request(app)
+		.post('/api/vehicledata')
+		.send(vehicleData)
+		.set('x-access-token', token);
 	return res;
 };
 
-const updateUser = function (user) {};
+const updateUser = function (user, id) {
+	const res = request(app)
+		.put(`/api/user/${id}`)
+		.send(user)
+		.set('x-access-token', token);
+	return res;
+};
 
 const updateVehicle = function (vehicle) {};
 
 const updateVehicleData = function (vehicleData) {};
 
 const deleteVehicleData = function (id) {
-	const response = request(app).delete(`/api/vehicledata/${id}`);
+	const response = request(app)
+		.delete(`/api/vehicledata/${id}`)
+		.set('x-access-token', token);
 	return response;
 };
 
@@ -506,45 +524,30 @@ describe('Test my POST /api/vehicledata response', () => {
 });
 
 describe('Test my PUT /api/user response', () => {
-	const id = 2;
-	let olderUser = '';
+	let id = '';
+
+	beforeAll(async () => {
+		const newUpdateUser = await addUser(insertUpdateUser);
+		id = newUpdateUser.body.User.id;
+	});
+
 	afterAll(async () => {
-		const responsee = await request(app)
-			.put(`/api/user/${id}`)
-			.send(olderUser)
-			.expect(200);
+		const deleteNewUser = await deleteUser(id);
 	});
 	it('Testing modify user (SUCCESS)', async () => {
-		expect(updateUserSuccess.name).not.toBe(null);
-		expect(updateUserSuccess.email).not.toBe(null);
-		expect(updateUserSuccess.full_name).not.toBe(null);
+		const res = await updateUser(updateUserSuccess, id).expect(200);
 
-		const olderUserRes = await request(app).get(`/api/users/${id}`);
-		olderUser = olderUserRes.body.User;
-
-		const res = await request(app)
-			.put(`/api/user/${id}`)
-			.send(updateUserSuccess)
-			.expect(200);
-
-		expect(res.body.User).toHaveProperty('name', updateUserSuccess.name);
-		expect(res.body.User).toHaveProperty('email', updateUserSuccess.email);
-		expect(res.body.User).toHaveProperty(
-			'full_name',
-			updateUserSuccess.full_name
+		expect(res.body).toHaveProperty(
+			'message',
+			`User (id: ${id} successfully updated)`
 		);
+		expect(res.body).toHaveProperty('User');
 	});
 
 	it('Testing modify user (Error: Invalid ID)', async () => {
 		idInvalid = 0;
-		expect(UserSuccess.name).not.toBe(null);
-		expect(UserSuccess.email).not.toBe(null);
-		expect(UserSuccess.full_name).not.toBe(null);
 
-		const res = await request(app)
-			.put(`/api/user/${idInvalid}`)
-			.send(UserSuccess)
-			.expect(404);
+		const res = await updateUser(UserSuccess, idInvalid).expect(404);
 
 		expect(res.body).toHaveProperty(
 			'error',
@@ -557,10 +560,7 @@ describe('Test my PUT /api/user response', () => {
 		expect(UserEmailAlreadyExists.email).not.toBe(null);
 		expect(UserEmailAlreadyExists.full_name).not.toBe(null);
 
-		const res = await request(app)
-			.put(`/api/user/${id}`)
-			.send(UserEmailAlreadyExists)
-			.expect(400);
+		const res = await updateUser(UserEmailAlreadyExists, id).expect(400);
 
 		expect(res.body).toHaveProperty(
 			'error',
@@ -569,14 +569,7 @@ describe('Test my PUT /api/user response', () => {
 	});
 
 	it('Testing modify user (Error: Name is Null)', async () => {
-		expect(UserNameNull).not.toHaveProperty('name');
-		expect(UserNameNull.email).not.toBe(null);
-		expect(UserNameNull.full_name).not.toBe(null);
-
-		const res = await request(app)
-			.put(`/api/user/${id}`)
-			.send(UserNameNull)
-			.expect(400);
+		const res = await updateUser(UserNameNull, id).expect(400);
 
 		expect(res.body).toHaveProperty(
 			'error',
@@ -585,14 +578,7 @@ describe('Test my PUT /api/user response', () => {
 	});
 
 	it('Testing modify user (Error: Email is Null)', async () => {
-		expect(UserEmailNull.name).not.toBe(null);
-		expect(UserEmailNull).not.toHaveProperty('email');
-		expect(UserEmailNull.full_name).not.toBe(null);
-
-		const res = await request(app)
-			.put(`/api/user/${id}`)
-			.send(UserEmailNull)
-			.expect(400);
+		const res = await updateUser(UserEmailNull, id).expect(400);
 
 		expect(res.body).toHaveProperty(
 			'error',
@@ -601,14 +587,7 @@ describe('Test my PUT /api/user response', () => {
 	});
 
 	it('Testing modify user (Error: Full_name is Null)', async () => {
-		expect(UserFullNameNull.name).not.toBe(null);
-		expect(UserFullNameNull.email).not.toBe(null);
-		expect(UserFullNameNull).not.toHaveProperty('full_name');
-
-		const res = await request(app)
-			.put(`/api/user/${id}`)
-			.send(UserFullNameNull)
-			.expect(400);
+		const res = await updateUser(UserFullNameNull, id).expect(400);
 
 		expect(res.body).toHaveProperty(
 			'error',

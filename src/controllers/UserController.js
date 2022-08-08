@@ -173,6 +173,7 @@ module.exports = {
 					const jsontoken = jwt.sign(user, process.env.TOKEN_SECRET, {
 						expiresIn: '1h',
 					});
+					res.set('x-access-token', jsontoken);
 
 					return res.status(200).send({
 						message: ' Login Successfully',

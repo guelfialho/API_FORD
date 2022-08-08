@@ -5,6 +5,13 @@ const UserSuccess = {
 	full_name: 'Miguel Fialho2',
 };
 
+const insertUpdateUser = {
+	name: 'insertUpdateUser',
+	email: 'insertUpdateUser@gmail.com.br',
+	password: 'teste2',
+	full_name: 'insertUpdateUser',
+};
+
 const UserEmailAlreadyExists = {
 	name: 'UserSuccess',
 	email: 'admin@ford.com',
@@ -58,4 +65,5 @@ module.exports = {
 	UserFullNameNull,
 	updateUserSuccess,
 	UserToBeDeleted,
+	insertUpdateUser,
 };

@@ -5,7 +5,11 @@ const bodyParser = require('body-parser');
 const routes = require('./routes');
 const app = express();
 
-app.use(cors());
+const corsOptions = {
+	exposedHeaders: ['x-access-token'],
+};
+
+app.use(cors(corsOptions));
 app.use(bodyParser.json());
 
 app.use(`/api`, routes);
