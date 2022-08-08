@@ -1,8 +1,14 @@
-require('dotenv').config({ path: 'config.env' });
+// require('dotenv').config({ path: 'config.env' });
+// const app = require('./server');
+// const connection = require('./infra/connection');
+// const Tables = require('./infra/tables');
+import './infra/config.js';
 
-const connection = require('./infra/connection');
-const Tables = require('./infra/tables');
-const app = require('./server');
+import app from './server.js';
+// import { config } from 'dotenv';
+// config({ path: 'config.env' });
+import connection from './infra/connection.js';
+import Tables from './infra/tables.js';
 
 connection.connect((erro) => {
 	if (erro) {
@@ -19,4 +25,4 @@ connection.connect((erro) => {
 	}
 });
 
-module.exports = app;
+// export default app

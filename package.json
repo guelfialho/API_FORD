@@ -3,6 +3,7 @@
 	"version": "1.0.0",
 	"description": "Construindo API REST para o desafio final do curso de desenvolvimento web Fullstack.",
 	"main": "index.js",
+	"type": "module",
 	"scripts": {
 		"start": "nodemon ./src/index.js",
 		"test": "jest"

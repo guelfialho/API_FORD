@@ -1,14 +1,19 @@
-const express = require('express');
+// const express = require('express');
+// const UserController = require('./controllers/UserController');
+// const VehicleController = require('./controllers/VehicleController');
+// const VehicleDataController = require('./controllers/VehicleDataController');
+// const { checkToken } = require('./auth/token_validator');
+
+import * as UserController from './controllers/UserController.js';
+import * as VehicleController from './controllers/VehicleController.js';
+import * as VehicleDataController from './controllers/VehicleDataController.js';
+import checkToken from './auth/token_validator.js';
+import express from 'express';
+
 const router = express.Router();
 
-const UserController = require('./controllers/UserController');
-const VehicleController = require('./controllers/VehicleController');
-const VehicleDataController = require('./controllers/VehicleDataController');
-
-const { checkToken } = require('./auth/token_validator');
-
 // --------------  ROTAS DE USUÁRIOS -------------------
-router.get('/users', UserController.getUsers); // TESTED
+router.get('/users', checkToken, UserController.getUsers); // TESTED
 router.get('/users/:id', UserController.getUserById);
 router.post('/user', UserController.insertUser); // TESTED
 router.put('/user/:id', UserController.modifyUser); // TESTED
@@ -29,4 +34,4 @@ router.post('/vehicledata', VehicleDataController.insertVehicleData); // TESTED
 router.put('/vehicledata/:id', VehicleDataController.modifyVehicleData); // TESTED
 router.delete('/vehicledata/:id', VehicleDataController.deleteVehicleData); // TESTED
 
-module.exports = router;
+export default router;
