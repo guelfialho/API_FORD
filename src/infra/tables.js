@@ -1,13 +1,29 @@
-import { genSaltSync, hashSync } from 'bcrypt';
+import { genSaltSync, hashSync } from 'bcrypt'; // DEFAULT USERS MUST ALSO HAVE THEIR PASSWORD ENCRYPTED.
 
 class Tables {
 	init(connection) {
 		this.connection = connection;
+
+		// CREATE TABLES
+		// ---------------------------------------
 		this.createUserTable();
 		this.createVehicleTable();
 		this.createVehicleDataTable();
+
+		// INSERT DEFAULT USERS INTO USER TABLE
+		// ---------------------------------------
+
+		this.insertUser('admin', 'admin@ford.com', '123456', 'Admin');
+		this.insertUser('teste', 'teste@ford.com', '123456', 'Teste');
+
+		// INSERT DEFAULT VEHICLES INTO VEHICLE TABLE
+		// ---------------------------------------
+
 		this.insertVehicle('Ranger', 222760, 25000, 22550);
 		this.insertVehicle('Bronco', 145760, 70000, 27550);
+
+		// INSERT DEFAULT VEHICLE DATA INTO VEHICLEDATA TABLE
+		// ---------------------------------------
 		this.insertVehicleData(
 			'2FRHDUYS2Y63NHD22454',
 			'23344',
@@ -28,9 +44,10 @@ class Tables {
 			'-12,2322',
 			'-35,2314'
 		);
-		this.insertUser('admin', 'admin@ford.com', '123456', 'Admin');
-		this.insertUser('teste', 'teste@ford.com', '123456', 'Teste');
 	}
+
+	// ---------------------------------------------------------------------------------
+	// ---------------------------------------------------------------------------------
 
 	createUserTable() {
 		const USER_SCHEMA = `
@@ -46,11 +63,12 @@ class Tables {
 		this.connection.query(USER_SCHEMA, (error) => {
 			if (error) {
 				console.log(error);
-			} else {
-				// console.log(`Tabela de usuário criada com sucesso`);
 			}
 		});
 	}
+
+	// ---------------------------------------------------------------------------------
+	// ---------------------------------------------------------------------------------
 
 	createVehicleTable() {
 		const VEHICLE_SCHEMA = `
@@ -65,11 +83,12 @@ class Tables {
 		this.connection.query(VEHICLE_SCHEMA, (error) => {
 			if (error) {
 				console.log(error);
-			} else {
-				// console.log(`Tabela de veículo criada com sucesso`);
 			}
 		});
 	}
+
+	// ---------------------------------------------------------------------------------
+	// ---------------------------------------------------------------------------------
 
 	createVehicleDataTable() {
 		const VEHICLEDATA_SCHEMA = `
@@ -88,11 +107,12 @@ class Tables {
 		this.connection.query(VEHICLEDATA_SCHEMA, (error) => {
 			if (error) {
 				console.log(error);
-			} else {
-				// console.log(`Tabela de dados de veículo criada com sucesso`);
 			}
 		});
 	}
+
+	// ---------------------------------------------------------------------------------
+	// ---------------------------------------------------------------------------------
 
 	insertVehicle(model, sold, connected, softwareUpdates) {
 		const INSERT_VEHICLE = `
@@ -106,11 +126,12 @@ class Tables {
 		this.connection.query(INSERT_VEHICLE, (error) => {
 			if (error) {
 				console.log(error);
-			} else {
-				// console.log(`Veículo inserido com sucesso!`);
 			}
 		});
 	}
+
+	// ---------------------------------------------------------------------------------
+	// ---------------------------------------------------------------------------------
 
 	insertVehicleData(
 		vin,
@@ -138,11 +159,12 @@ class Tables {
 		this.connection.query(INSERT_VEHICLEDATA, (error) => {
 			if (error) {
 				console.log(error);
-			} else {
-				// console.log(`Dados de veículo inserido com sucesso`);
 			}
 		});
 	}
+
+	// ---------------------------------------------------------------------------------
+	// ---------------------------------------------------------------------------------
 
 	insertUser(name, email, password, full_name) {
 		const salt = genSaltSync(10);
@@ -158,12 +180,13 @@ class Tables {
 		this.connection.query(INSERT_USER, (error) => {
 			if (error) {
 				console.log(error);
-			} else {
-				// console.log(`Usuário inserido com sucesso`);
 			}
 		});
 	}
 }
+
+// ---------------------------------------------------------------------------------
+// ---------------------------------------------------------------------------------
 
 const table = new Tables();
 
