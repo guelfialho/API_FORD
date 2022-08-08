@@ -1,8 +1,3 @@
-// const express = require('express');
-// const cors = require('cors');
-// const bodyParser = require('body-parser');
-// const routes = require('./routes');
-
 import express from 'express';
 import cors from 'cors';
 import bodyParser from 'body-parser';
@@ -20,5 +15,3 @@ app.use(bodyParser.json());
 app.use(`/api`, routes);
 
 export default app;
-
-// module.exports = app;

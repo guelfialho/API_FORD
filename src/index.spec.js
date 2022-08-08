@@ -1,7 +1,7 @@
-const app = require('./index');
-const request = require('supertest');
+import app from './index';
+import request from 'supertest';
 
-const {
+import {
 	VehicleSuccess,
 	VehicleModelAlreadyExists,
 	VehicleModelNull,
@@ -10,9 +10,9 @@ const {
 	VehicleSoftwareUpdateslNull,
 	VehicleToBeDeleted,
 	insertVehicleUpdate,
-} = require('./test/vehicles/vehiclesConstants');
+} from './test/vehicles/vehiclesConstants';
 
-const {
+import {
 	UserSuccess,
 	UserEmailAlreadyExists,
 	UserNameNull,
@@ -22,9 +22,9 @@ const {
 	updateUserSuccess,
 	UserToBeDeleted,
 	insertUpdateUser,
-} = require('./test/users/userConstants');
+} from './test/users/userConstants';
 
-const {
+import {
 	VD_success,
 	VD_VinAlreadyExists,
 	VD_VinNull,
@@ -37,7 +37,7 @@ const {
 	VD_LongitudeNull,
 	VD_ToBeDeleted,
 	VD_insertToUpdate,
-} = require('./test/vehiclesData/vehiclesDataConstants');
+} from './test/vehiclesData/vehiclesDataConstants';
 
 let token;
 
@@ -170,7 +170,7 @@ describe('Test my GET /api/users response', () => {
 
 		const users = res.body.Users;
 
-		for (user of users) {
+		for (let user of users) {
 			expect(user).toHaveProperty('id');
 			expect(user).toHaveProperty('name');
 			expect(user).toHaveProperty('email');
@@ -183,7 +183,7 @@ describe('Test my GET /api/users response', () => {
 
 		const users = res.body.Users;
 
-		for (user of users) {
+		for (let user of users) {
 			expect(user.id).not.toBe(null);
 			expect(user.name).not.toBe(null);
 			expect(user.email).not.toBe(null);
@@ -213,7 +213,7 @@ describe('Test my GET /api/vehicles response', () => {
 		const res = await getVehicles();
 		const vehicles = res.body.Vehicles;
 
-		for (vehicle of vehicles) {
+		for (let vehicle of vehicles) {
 			expect(vehicle).toHaveProperty('id');
 			expect(vehicle).toHaveProperty('model');
 			expect(vehicle).toHaveProperty('sold');
@@ -226,7 +226,7 @@ describe('Test my GET /api/vehicles response', () => {
 		const res = await getVehicles();
 		const vehicles = res.body.Vehicles;
 
-		for (vehicle of vehicles) {
+		for (let vehicle of vehicles) {
 			expect(vehicle.id).not.toBe(null);
 			expect(vehicle.name).not.toBe(null);
 			expect(vehicle.email).not.toBe(null);
@@ -256,7 +256,7 @@ describe('Test my GET /api/vehicledata response', () => {
 		const res = await getVehicleData();
 		const vehiclesData = res.body.VehiclesData;
 
-		for (vehicleData of vehiclesData) {
+		for (let vehicleData of vehiclesData) {
 			expect(vehicleData).toHaveProperty('id');
 			expect(vehicleData).toHaveProperty('vin');
 			expect(vehicleData).toHaveProperty('odometer');
@@ -272,7 +272,7 @@ describe('Test my GET /api/vehicledata response', () => {
 		const res = await getVehicleData();
 		const vehiclesData = res.body.VehiclesData;
 
-		for (vehicleData of vehiclesData) {
+		for (let vehicleData of vehiclesData) {
 			expect(vehicleData.id).not.toBe(null);
 			expect(vehicleData.vin).not.toBe(null);
 			expect(vehicleData.odometer).not.toBe(null);
@@ -559,7 +559,7 @@ describe('Test my PUT /api/user response', () => {
 	});
 
 	it('Testing modify user (Error: Invalid ID)', async () => {
-		idInvalid = 0;
+		let idInvalid = 0;
 
 		const res = await updateUser(UserSuccess, idInvalid).expect(404);
 

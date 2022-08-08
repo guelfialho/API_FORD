@@ -1,6 +1,3 @@
-// const UserService = require('../services/UserService');
-// const { genSaltSync, hashSync, compareSync } = require('bcrypt');
-// const jwt = require('jsonwebtoken');
 import * as UserService from '../services/UserService.js';
 import { genSaltSync, hashSync, compareSync } from 'bcrypt';
 import jwt from 'jsonwebtoken';

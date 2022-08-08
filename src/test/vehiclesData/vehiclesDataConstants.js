@@ -128,7 +128,7 @@ const VD_ToBeDeleted = {
 	longitude: '1574532',
 };
 
-module.exports = {
+export {
 	VD_success,
 	VD_VinAlreadyExists,
 	VD_VinNull,

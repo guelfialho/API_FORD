@@ -56,7 +56,7 @@ const UserToBeDeleted = {
 	full_name: 'DELETE TEST',
 };
 
-module.exports = {
+export {
 	UserSuccess,
 	UserEmailAlreadyExists,
 	UserNameNull,

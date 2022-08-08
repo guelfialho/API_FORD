@@ -50,7 +50,7 @@ const VehicleToBeDeleted = {
 	softwareUpdates: '1574532',
 };
 
-module.exports = {
+export {
 	VehicleSuccess,
 	VehicleModelAlreadyExists,
 	VehicleModelNull,

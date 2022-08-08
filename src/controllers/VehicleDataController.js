@@ -1,4 +1,3 @@
-// const VehicleDataService = require('../services/VehicleDataService');
 import * as VehicleDataService from '../services/VehicleDataService.js';
 
 async function getVehicleData(req, res) {

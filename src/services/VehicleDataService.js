@@ -1,4 +1,3 @@
-// db = require('../infra/connection');
 import connection from '../infra/connection.js';
 const db = connection;
 
