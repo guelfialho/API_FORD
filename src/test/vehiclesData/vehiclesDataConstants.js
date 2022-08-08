@@ -9,6 +9,17 @@ const VD_success = {
 	longitude: '1574532',
 };
 
+const VD_insertToUpdate = {
+	vin: 'UPTDATES2Y63NHD22554',
+	odometer: '9517532',
+	tirePressure: '3579512',
+	status: '1574532',
+	batteryStatus: 'F-1502',
+	fuelLevel: '9517532',
+	latitude: '3579512',
+	longitude: '1574532',
+};
+
 const VD_VinAlreadyExists = {
 	vin: '2FRHDUYS2Y63NHD22454',
 	odometer: '9517532',
@@ -129,4 +140,5 @@ module.exports = {
 	VD_LatitudeNull,
 	VD_LongitudeNull,
 	VD_ToBeDeleted,
+	VD_insertToUpdate,
 };
