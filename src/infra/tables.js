@@ -13,14 +13,16 @@ class Tables {
 		// INSERT DEFAULT USERS INTO USER TABLE
 		// ---------------------------------------
 
-		this.insertUser('admin', 'admin@ford.com', '123456', 'Admin');
-		this.insertUser('teste', 'teste@ford.com', '123456', 'Teste');
+		this.insertUser('Admin', 'admin@ford.com', '123456', 'Admin');
+		this.insertUser('Miguel', 'miguel@ford.com', '123456', 'Miguel Fialho');
 
 		// INSERT DEFAULT VEHICLES INTO VEHICLE TABLE
 		// ---------------------------------------
 
-		this.insertVehicle('Ranger', 222760, 25000, 22550);
-		this.insertVehicle('Bronco', 145760, 70000, 27550);
+		this.insertVehicle('Ranger', 145760, 70000, 27550);
+		this.insertVehicle('Mustang', 1500, 500, 750);
+		this.insertVehicle('Territory', 4560, 4000, 3050);
+		this.insertVehicle('Bronco Sport', 7560, 4060, 2050);
 
 		// INSERT DEFAULT VEHICLE DATA INTO VEHICLEDATA TABLE
 		// ---------------------------------------
@@ -28,21 +30,61 @@ class Tables {
 			'2FRHDUYS2Y63NHD22454',
 			'23344',
 			'36,36,35,34',
-			'on',
+			'ON',
 			'Ok',
 			'76',
 			'-12,2322',
 			'-35,2314'
 		);
 		this.insertVehicleData(
-			'5555DUYS2Y63NHD22454',
-			'23344',
-			'36,36,35,34',
-			'on',
+			'2FRHTTTS2Y63NHD22455',
+			'37344',
+			'37,37,36,35',
+			'ON',
 			'Ok',
-			'76',
-			'-12,2322',
-			'-35,2314'
+			'44',
+			'-14,2322',
+			'-25,2314'
+		);
+		this.insertVehicleData(
+			'3MIGTSYS2Y63NHD22456',
+			'46344',
+			'38,38,36,35',
+			'OFF',
+			'Ok',
+			'44',
+			'-04,2322',
+			'-65,2314'
+		);
+		this.insertVehicleData(
+			'3MIGTPPP2Y63NHD22467',
+			'98344',
+			'39,39,36,35',
+			'ON',
+			'Ok',
+			'44',
+			'-02,2322',
+			'-15,2314'
+		);
+		this.insertVehicleData(
+			'4TICTPPP2Y63NHD22467',
+			'21144',
+			'40,40,37,36',
+			'OFF',
+			'Ok',
+			'44',
+			'-94,2322',
+			'-05,2314'
+		);
+		this.insertVehicleData(
+			'4TICTFFF2Y63NHD22467',
+			'78954',
+			'41,41,38,37',
+			'ON',
+			'Ok',
+			'44',
+			'-01,2322',
+			'-07,2314'
 		);
 	}
 
