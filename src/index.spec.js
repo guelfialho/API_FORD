@@ -9,6 +9,7 @@ const {
 	VehicleConnectedlNull,
 	VehicleSoftwareUpdateslNull,
 	VehicleToBeDeleted,
+	insertVehicleUpdate,
 } = require('./test/vehicles/vehiclesConstants');
 
 const {
@@ -89,7 +90,13 @@ const updateUser = function (user, id) {
 	return res;
 };
 
-const updateVehicle = function (vehicle) {};
+const updateVehicle = function (vehicle, id) {
+	const res = request(app)
+		.put(`/api/vehicle/${id}`)
+		.send(vehicle)
+		.set('x-access-token', token);
+	return res;
+};
 
 const updateVehicleData = function (vehicleData) {};
 
@@ -597,51 +604,28 @@ describe('Test my PUT /api/user response', () => {
 });
 
 describe('Test my PUT /api/vehicle response', () => {
-	const id = 2;
+	let id = '';
 	let olderVehicle = '';
+	beforeAll(async () => {
+		const insertNewVehicle = await addVehicle(insertVehicleUpdate).expect(
+			200
+		);
+		id = insertNewVehicle.body.Vehicle.id;
+	});
+
 	afterAll(async () => {
-		const responsee = await request(app)
-			.put(`/api/vehicle/${id}`)
-			.send(olderVehicle)
-			.expect(200);
+		const deleteNewVehicle = await deleteVehicle(id);
 	});
 	it('Testing modify vehicle (SUCCESS)', async () => {
-		expect(VehicleSuccess.model).not.toBe(null);
-		expect(VehicleSuccess.sold).not.toBe(null);
-		expect(VehicleSuccess.connected).not.toBe(null);
-		expect(VehicleSuccess.softwareUpdates).not.toBe(null);
+		const res = await updateVehicle(VehicleSuccess, id).expect(200);
 
-		const olderVehicleRes = await request(app).get(`/api/vehicles/${id}`);
-		olderVehicle = olderVehicleRes.body.Vehicle;
-
-		const res = await request(app)
-			.put(`/api/vehicle/${id}`)
-			.send(VehicleSuccess)
-			.expect(200);
-
-		expect(res.body.Vehicle).toHaveProperty('model', VehicleSuccess.model);
-		expect(res.body.Vehicle).toHaveProperty('sold', VehicleSuccess.sold);
-		expect(res.body.Vehicle).toHaveProperty(
-			'connected',
-			VehicleSuccess.connected
-		);
-		expect(res.body.Vehicle).toHaveProperty(
-			'softwareUpdates',
-			VehicleSuccess.softwareUpdates
-		);
+		expect(res.body).toHaveProperty('Vehicle');
 	});
 
 	it('Testing modify vehicle (Error: ID Invalid)', async () => {
 		let idInvalid = 0;
-		expect(VehicleSuccess.model).not.toBe(null);
-		expect(VehicleSuccess.sold).not.toBe(null);
-		expect(VehicleSuccess.connected).not.toBe(null);
-		expect(VehicleSuccess.softwareUpdates).not.toBe(null);
 
-		const res = await request(app)
-			.put(`/api/vehicle/${idInvalid}`)
-			.send(VehicleSuccess)
-			.expect(404);
+		const res = await updateVehicle(VehicleSuccess, idInvalid).expect(404);
 
 		expect(res.body).toHaveProperty(
 			'error',
@@ -650,15 +634,9 @@ describe('Test my PUT /api/vehicle response', () => {
 	});
 
 	it('Testing modify vehicle (Error: Model Already Exists)', async () => {
-		expect(VehicleModelAlreadyExists.model).not.toBe(null);
-		expect(VehicleModelAlreadyExists.sold).not.toBe(null);
-		expect(VehicleModelAlreadyExists.connected).not.toBe(null);
-		expect(VehicleModelAlreadyExists.softwareUpdates).not.toBe(null);
-
-		const res = await request(app)
-			.put(`/api/vehicle/${id}`)
-			.send(VehicleModelAlreadyExists)
-			.expect(400);
+		const res = await updateVehicle(VehicleModelAlreadyExists, id).expect(
+			400
+		);
 
 		expect(res.body).toHaveProperty(
 			'error',
@@ -667,15 +645,7 @@ describe('Test my PUT /api/vehicle response', () => {
 	});
 
 	it('Testing modify vehicle (Error: Model is Null)', async () => {
-		expect(VehicleModelNull).not.toHaveProperty('model');
-		expect(VehicleModelNull.sold).not.toBe(null);
-		expect(VehicleModelNull.connected).not.toBe(null);
-		expect(VehicleModelNull.softwareUpdates).not.toBe(null);
-
-		const res = await request(app)
-			.put(`/api/vehicle/${id}`)
-			.send(VehicleModelNull)
-			.expect(400);
+		const res = await updateVehicle(VehicleModelNull, id).expect(400);
 
 		expect(res.body).toHaveProperty(
 			'error',
@@ -684,15 +654,7 @@ describe('Test my PUT /api/vehicle response', () => {
 	});
 
 	it('Testing modify vehicle (Error: Sold is Null)', async () => {
-		expect(VehicleSoldlNull.model).not.toBe(null);
-		expect(VehicleSoldlNull).not.toHaveProperty('sold');
-		expect(VehicleSoldlNull.connected).not.toBe(null);
-		expect(VehicleSoldlNull.softwareUpdates).not.toBe(null);
-
-		const res = await request(app)
-			.put(`/api/vehicle/${id}`)
-			.send(VehicleSoldlNull)
-			.expect(400);
+		const res = await updateVehicle(VehicleSoldlNull, id).expect(400);
 
 		expect(res.body).toHaveProperty(
 			'error',
@@ -701,15 +663,7 @@ describe('Test my PUT /api/vehicle response', () => {
 	});
 
 	it('Testing modify vehicle (Error: Connected is Null)', async () => {
-		expect(VehicleConnectedlNull.model).not.toBe(null);
-		expect(VehicleConnectedlNull.sold).not.toBe(null);
-		expect(VehicleConnectedlNull).not.toHaveProperty('connected');
-		expect(VehicleConnectedlNull.softwareUpdates).not.toBe(null);
-
-		const res = await request(app)
-			.put(`/api/vehicle/${id}`)
-			.send(VehicleConnectedlNull)
-			.expect(400);
+		const res = await updateVehicle(VehicleConnectedlNull, id).expect(400);
 
 		expect(res.body).toHaveProperty(
 			'error',
@@ -718,17 +672,9 @@ describe('Test my PUT /api/vehicle response', () => {
 	});
 
 	it('Testing modify vehicle (Error: SoftwareUpdates is Null)', async () => {
-		expect(VehicleSoftwareUpdateslNull.model).not.toBe(null);
-		expect(VehicleSoftwareUpdateslNull.sold).not.toBe(null);
-		expect(VehicleSoftwareUpdateslNull.connected).not.toBe(null);
-		expect(VehicleSoftwareUpdateslNull).not.toHaveProperty(
-			'softwareUpdates'
+		const res = await updateVehicle(VehicleSoftwareUpdateslNull, id).expect(
+			400
 		);
-
-		const res = await request(app)
-			.put(`/api/vehicle/${id}`)
-			.send(VehicleSoftwareUpdateslNull)
-			.expect(400);
 
 		expect(res.body).toHaveProperty(
 			'error',

@@ -5,6 +5,13 @@ const VehicleSuccess = {
 	softwareUpdates: '1574532',
 };
 
+const insertVehicleUpdate = {
+	model: 'INS-UPTADE',
+	sold: '9517532',
+	connected: '3579512',
+	softwareUpdates: '1574532',
+};
+
 const VehicleModelAlreadyExists = {
 	model: 'Ranger',
 	sold: '9517532',
@@ -51,4 +58,5 @@ module.exports = {
 	VehicleConnectedlNull,
 	VehicleSoftwareUpdateslNull,
 	VehicleToBeDeleted,
+	insertVehicleUpdate,
 };
