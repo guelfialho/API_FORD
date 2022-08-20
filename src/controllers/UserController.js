@@ -8,7 +8,7 @@ async function getUsers(req, res) {
 	let users = await UserService.getUsers();
 
 	if (!users) {
-		res.staus(404).json({ error: 'No users found' });
+		res.status(404).json({ error: 'No users found' });
 	} else {
 		for (let i in users) {
 			UsersArray.push({
