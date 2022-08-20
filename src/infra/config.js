@@ -1,4 +1,0 @@
-// ES6 MODULES RUN ALL IMPORTS BEAFORE ALL, SO FOR .ENV FILE BE CONFIGURATED FIRST THIS FILE MUST BE IMPORTED IN THE INDEX.JS
-
-import dotenv from 'dotenv';
-dotenv.config({ path: 'config.env' });
