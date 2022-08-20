@@ -23,7 +23,7 @@ class InsertUsers {
     		email,
     		password,
     		fullName
-		) SELECT '${user.name}', '${user.email}', '${user.password}', '${user.fullName}' WHERE NOT EXISTS (SELECT * FROM user WHERE name = '${user.name}')`;
+		) SELECT '${user.name}', '${user.email}', '${user.password}', '${user.fullName}' FROM (SELECT 1) t WHERE NOT EXISTS (SELECT * FROM user WHERE name = '${user.name}')`;
     this.connection.query(INSERT_USER, (error) => {
       if (error) {
         console.log(error);

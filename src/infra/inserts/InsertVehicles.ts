@@ -25,7 +25,7 @@ class InsertVehicles {
 			sold,
 			connected,
 			softwareUpdates
-		) SELECT '${vehicle.model}', ${vehicle.sold}, ${vehicle.connected}, ${vehicle.softwareUpdates} WHERE NOT EXISTS (SELECT * FROM VEHICLE WHERE model = '${vehicle.model}')`;
+		) SELECT '${vehicle.model}', ${vehicle.sold}, ${vehicle.connected}, ${vehicle.softwareUpdates} FROM (SELECT 1) t WHERE NOT EXISTS (SELECT * FROM VEHICLE WHERE model = '${vehicle.model}')`;
 
     this.connection.query(INSERT_VEHICLE, (error) => {
       if (error) {

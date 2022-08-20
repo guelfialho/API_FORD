@@ -33,7 +33,7 @@ class InsertVehiclesData {
 			fuelLevel,
 			latitude,
 			longitude
-		) SELECT '${vehicleData.vin}', '${vehicleData.odometer}', '${vehicleData.tirePressure}', '${vehicleData.status}', '${vehicleData.batteryStatus}', '${vehicleData.fuelLevel}', '${vehicleData.latitude}', '${vehicleData.longitude}' WHERE NOT EXISTS (SELECT * FROM VEHICLEDATA WHERE vin = '${vehicleData.vin}')
+		) SELECT '${vehicleData.vin}', '${vehicleData.odometer}', '${vehicleData.tirePressure}', '${vehicleData.status}', '${vehicleData.batteryStatus}', '${vehicleData.fuelLevel}', '${vehicleData.latitude}', '${vehicleData.longitude}' FROM (SELECT 1) t WHERE NOT EXISTS (SELECT * FROM VEHICLEDATA WHERE vin = '${vehicleData.vin}')
 		`;
 
     this.connection.query(INSERT_VEHICLEDATA, (error) => {

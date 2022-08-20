@@ -16,8 +16,10 @@ connection.connect((erro) => {
     InsertVehicles.init(connection);
     InsertVehiclesData.init(connection);
 
-    app.listen(process.env.PORT, () => {
-      console.log(`Servidor rodando em: http://localhost:${process.env.PORT}`);
+    app.listen(process.env.PORT || 3000, () => {
+      console.log(
+        `Servidor rodando em: http://localhost:${process.env.PORT || 3000}`
+      );
     });
   }
 });

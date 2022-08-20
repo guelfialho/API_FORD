@@ -1,10 +1,10 @@
 import { User } from "../../interfaces/User";
 
 const defaultUser1: User = {
-  name: "Admin",
-  email: "admin@ford.com",
-  password: "123456",
-  fullName: "Admin",
+  name: `Admin`,
+  email: `admin@ford.com`,
+  password: `123456`,
+  fullName: `Admin`,
 };
 
 const defaultUser2: User = {
